@@ -16,9 +16,9 @@
 
 | Name | GitHub username | Email |
 |---|---|---|
-| Marcus Feist | **TODO** | **TODO** |
-| Nate Koo | **TODO** | **TODO** |
-| Lucas Lopes | **TODO** | **TODO** |
+| Marcus Feist | MarcusF5429 | **TODO** |
+| Nate Koo | nate-koo | **TODO** |
+| Lucas Lopes | lulo2258 | lulo2258@colorado.edu |
 | Nathan Novankham | nano6166 | nano6166@colorado.edu |
 | Krishiv Singh | **TODO** | **TODO** |
 
