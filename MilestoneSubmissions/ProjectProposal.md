@@ -6,7 +6,7 @@
 
 ## 1. Team Number
 
-**TODO**-3 (recitation section number, followed by team digit 3)
+013-3 (recitation section 013, team 3)
 
 ## 2. Team Name
 
