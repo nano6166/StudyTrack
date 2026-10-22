@@ -6,11 +6,11 @@
 
 ## 1. Team Number
 
-**TODO**-3 (recitation section number, followed by team digit 3)
+013-3
 
 ## 2. Team Name
 
-**TODO** (optional)
+The Enchanters
 
 ## 3. Team Members
 

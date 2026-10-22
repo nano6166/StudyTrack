@@ -4,11 +4,11 @@ StudyTrack is a web application for CU Boulder students. Users add their courses
 
 ## Contributors
 
-- Marcus Feist (TODO: GitHub username)
-- Nate Koo (TODO: GitHub username)
-- Lucas Lopes (TODO: GitHub username)
+- Marcus Feist (MarcusF5429)
+- Nate Koo (nate-koo)
+- Lucas Lopes (lulo2258)
 - Nathan Novankham (nano6166)
-- Krishiv Singh (TODO: GitHub username)
+- Krishiv Singh (?)
 
 ## Technology Stack
 
