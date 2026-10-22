@@ -6,11 +6,7 @@
 
 ## 1. Team Number
 
-<<<<<<< HEAD
-013-3
-=======
 013-3 (recitation section 013, team 3)
->>>>>>> ca9915c397139e7b37663997586e4e25520bca09
 
 ## 2. Team Name
 
@@ -20,8 +16,8 @@ The Enchanters
 
 | Name | GitHub username | Email |
 |---|---|---|
-| Marcus Feist | MarcusF5429 | **TODO** |
-| Nate Koo | nate-koo | **TODO** |
+| Marcus Feist | MarcusF5429 | mafe6678@colorado.edu |
+| Nate Koo | nate-koo | nako2875@colorado.edu |
 | Lucas Lopes | lulo2258 | lulo2258@colorado.edu |
 | Nathan Novankham | nano6166 | nano6166@colorado.edu |
 | Krishiv Singh | **TODO** | **TODO** |
