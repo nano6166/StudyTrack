@@ -69,7 +69,7 @@ ReadMe.md
 
 ## 9. Development Methodology
 
-The team will follow a hybrid Agile method that uses Scrum meetings with a Kanban board. Work is planned in one-week sprints that start after each weekly TA meeting. Each user story is an issue on the public GitHub project board, which has the columns Backlog, To Do, In Progress, In Review and Done. Every user story is built on its own branch, and a second team member reviews the pull request before it is merged into `main`. Nobody commits directly to `main`.
+The team will follow a hybrid Agile method that uses Scrum meetings with a Kanban board. Work is planned in one-week sprints that start after each weekly TA meeting. Each user story is an issue on the public GitHub project board, which has the columns Backlog, To Do, In Progress, In Review and Done. Every user story is built on its own branch, and a second team member reviews the pull request before it is merged into `main`. 
 
 ## 10. Communication Plan
 
@@ -79,7 +79,7 @@ The team communicates through a Discord server with separate channels for genera
 
 **Team meetings:** **TODO** (day and time), in person at **TODO** (for example, Norlin Library), with a Discord video call as a backup.
 
-**Weekly TA meeting:** **TODO** (day and time), **TODO** (in person or online), during or after recitation. A rotating scribe records decisions, the alternatives that were discussed and follow-up items with owners. The minutes are added to `TeamMeetingLogs` on the day of the meeting.
+**Weekly TA meeting:** Every Monday at 6:30pm, online. A rotating scribe records decisions, the alternatives that were discussed and follow-up items with owners. The minutes are added to `TeamMeetingLogs` on the day of the meeting.
 
 ## 12. Use Case Diagram
 
