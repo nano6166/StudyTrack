@@ -69,7 +69,9 @@ The team will follow a hybrid Agile method that uses Scrum meetings with a Kanba
 
 ## 10. Communication Plan
 
-The team communicates through a Discord server with separate channels for general discussion, code reviews and meeting notes. Discussion about a specific task is recorded as comments on the matching GitHub user story issue.
+We plan to communicate about major features or changes during the recitation times in class. Outside of class, we plan to use Discord, mainly for coordinating changes to the codebase or for communicating about how to best fixmerge conflicts.
+
+Our team agreed that we will mainly keep communicaitons during the week, but if there is something urgent we don't mind handling it over the weekend.
 
 ## 11. Meeting Plan
 
