@@ -73,7 +73,7 @@ The team communicates through a Discord server with separate channels for genera
 
 ## 11. Meeting Plan
 
-**Team meetings:** Any day past 6pm with a discord call.
+**Team meetings:** 
 
 **Weekly TA meeting:** Every Monday at 6:30pm, online. A rotating scribe records decisions, the alternatives that were discussed and follow-up items with owners. The minutes are added to `TeamMeetingLogs` on the day of the meeting.
 
