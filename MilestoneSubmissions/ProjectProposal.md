@@ -75,7 +75,7 @@ Our team agreed that we will mainly keep communications during the week, but if 
 
 ## 11. Meeting Plan
 
-**Team meetings:** 
+**Team meetings:** Team meetings are Monday at Zomm and each student should show their commits and talk about what they did contribute for the projet. 
 
 **Weekly TA meeting:** Every Monday at 6:30pm, online. A rotating scribe records decisions, the alternatives that were discussed and follow-up items with owners. The minutes are added to `TeamMeetingLogs` on the day of the meeting.
 
