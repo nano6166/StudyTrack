@@ -20,7 +20,7 @@ The Enchanters
 
 | Name | GitHub username | Email |
 |---|---|---|
-| Marcus Feist | MarcusF5429 | **TODO** |
+| Marcus Feist | MarcusF5429 | mafe6678@colorado.edu |
 | Nate Koo | nate-koo | **TODO** |
 | Lucas Lopes | lulo2258 | lulo2258@colorado.edu |
 | Nathan Novankham | nano6166 | nano6166@colorado.edu |
