@@ -1,0 +1,4 @@
+Release Notes October 26, 2026
+
+-Created repository
+-Created design document: https://github.com/nano6166/StudyTrack/blob/main/MilestoneSubmissions/ProjectProposal.md
