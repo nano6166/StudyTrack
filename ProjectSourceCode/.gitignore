@@ -105,3 +105,6 @@ dist
 
 # Package lock
 package-lock.json
+
+# MAC OS Specific File
+.DS_Store
