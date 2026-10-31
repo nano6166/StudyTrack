@@ -1,0 +1,48 @@
+body {
+  background-color: #f4f6fb;
+  color: #202938;
+}
+
+.dashboard {
+  max-width: 1100px;
+  margin: 48px auto;
+}
+
+.deadline-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 4%);
+}
+
+.table > :not(caption) > * > * {
+  padding: 16px;
+}
+
+.due-soon {
+  color: #9a1412;
+  background: #ffedd5;
+}
+
+.due-later {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+.deadline-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.date-cell {
+  white-space: nowrap;
+}
+
+.table caption {
+  padding-left: 16px;
+  padding-right: 16px;
+}
