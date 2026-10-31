@@ -1,0 +1,26 @@
+{
+  "name": "studytrack",
+  "version": "1.0.0",
+  "description": "StudyTrack is a web application for CU Boulder students. Users add their courses and assignments, see upcoming deadlines on one page and log study sessions against each assignment. The profile page shows study hours per course, and an AI feature breaks a large assignment into smaller tasks.",
+  "homepage": "https://github.com/nano6166/StudyTrack#readme",
+  "bugs": {
+    "url": "https://github.com/nano6166/StudyTrack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nano6166/StudyTrack.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "express-session": "^1.19.0",
+    "promise-pg": "^0.1.1"
+  }
+}
