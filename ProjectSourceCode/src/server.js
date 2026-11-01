@@ -15,6 +15,11 @@ const db = pgp({
     password: process.env.password
 });
 
+app.get('/', (req, res) => {
+    res.send('This page is under construction!');
+    res.end();
+})
+
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

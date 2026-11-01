@@ -19,7 +19,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./:/repository
+      - .:/repository
     command: 'npm start'
 volumes:
   studytrack-persistent-storage:
