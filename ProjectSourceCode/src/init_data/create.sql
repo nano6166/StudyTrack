@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS assignments (
     course_id INT REFERENCES courses(id) ON DELETE CASCADE,
     name VARCHAR(100),
     description VARCHAR(200) NOT NULL,
+    due_date DATE,
+    status VARCHAR(20) NOT NULL DEFAULT 'Not started'
+        CHECK (status IN ('Not started', 'In progress', 'Done')),
 
     CONSTRAINT ownername FOREIGN KEY (ownername) REFERENCES users(username)
 );

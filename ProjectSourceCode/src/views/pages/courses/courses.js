@@ -38,7 +38,9 @@ function createCourseItem(course) {
   item.className = "list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2";
 
   const label = document.createElement("div");
-  const code = document.createElement("strong");
+  const code = document.createElement("a");
+  code.className = "fw-bold";
+  code.href = `course.html?id=${course.id}`;
   code.textContent = course.code;
   label.appendChild(code);
 

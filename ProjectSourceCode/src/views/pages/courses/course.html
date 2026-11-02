@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Study Track | Course</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="courses.css">
+  <script src="course.js" defer></script>
+</head>
+
+<body>
+  <main class="container courses-page">
+    <header class="mb-4">
+      <a href="courses.html">&larr; My courses</a>
+      <p class="text-primary fw-semibold mb-1 mt-3">Study Track</p>
+      <h1 id="courseTitle" class="h2">Course</h1>
+    </header>
+
+    <section class="courses-card p-3 p-md-4" aria-labelledby="assignments-heading">
+      <h2 id="assignments-heading" class="h5 mb-3">Assignments</h2>
+
+      <div id="errorMessage" class="alert alert-danger" role="alert" hidden></div>
+
+      <p id="status" role="status" aria-live="polite" class="text-secondary"></p>
+
+      <div id="tableContainer" class="table-responsive" hidden>
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">Assignment</th>
+              <th scope="col">Due date</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="assignmentRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -25,6 +25,7 @@ app.get('/', (req, res) => {
     res.end();
 })
 
-app.listen(PORT, () => {
+// Exported so the Mocha tests can send requests to the server
+module.exports = app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

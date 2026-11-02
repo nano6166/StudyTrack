@@ -1,13 +1,24 @@
 const express = require("express");
 
 // JSON routes for the Courses page. The page itself is src/views/pages/courses/courses.html
+// Allowed values for assignments.status
+const STATUSES = ["Not started", "In progress", "Done"];
+
 module.exports = (db) => {
     const router = express.Router();
 
     // Every course route needs a signed-in user
-    router.use("/api/courses", (req, res, next) => {
+    router.use(["/api/courses", "/api/assignments"], (req, res, next) => {
         if (!req.session || !req.session.user) {
             return res.status(401).json({ error: "Please sign in first." });
+        }
+        next();
+    });
+
+    // Ids in the URL must be whole numbers, otherwise Postgres throws an error
+    router.param("id", (req, res, next, id) => {
+        if (!/^\d+$/.test(id)) {
+            return res.status(404).json({ error: "Not found." });
         }
         next();
     });
@@ -71,6 +82,46 @@ module.exports = (db) => {
             return res.status(404).json({ error: "Course not found." });
         }
         res.status(204).end();
+    });
+
+    // List one course's assignments, earliest due date first
+    router.get("/api/courses/:id/assignments", async (req, res) => {
+        const course = await db.oneOrNone(
+            "SELECT id, code, name FROM courses WHERE id = $1 AND username = $2",
+            [req.params.id, req.session.user.username]
+        );
+        if (!course) {
+            return res.status(404).json({ error: "Course not found." });
+        }
+
+        const assignments = await db.any(
+            `SELECT id, name, description, to_char(due_date, 'YYYY-MM-DD') AS due_date, status,
+                    (status <> 'Done' AND due_date < CURRENT_DATE) AS overdue
+             FROM assignments
+             WHERE course_id = $1
+             ORDER BY due_date NULLS LAST`,
+            [course.id]
+        );
+        res.json({ course, assignments });
+    });
+
+    // Change an assignment's status
+    router.patch("/api/assignments/:id/status", async (req, res) => {
+        const { status } = req.body || {};
+        if (!STATUSES.includes(status)) {
+            return res.status(400).json({ error: `Status must be one of: ${STATUSES.join(", ")}.` });
+        }
+
+        const assignment = await db.oneOrNone(
+            `UPDATE assignments SET status = $1
+             WHERE id = $2 AND ownername = $3
+             RETURNING id, status, (status <> 'Done' AND due_date < CURRENT_DATE) AS overdue`,
+            [status, req.params.id, req.session.user.username]
+        );
+        if (!assignment) {
+            return res.status(404).json({ error: "Assignment not found." });
+        }
+        res.json(assignment);
     });
 
     return router;
