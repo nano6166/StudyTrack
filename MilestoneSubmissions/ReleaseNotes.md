@@ -2,9 +2,31 @@
 
 Team 013-3 (The Enchanters). A new section is added at the top of this file before each weekly TA meeting.
 
+## Week 2 (October 27 to November 2, 2026)
+
+**Status:** Docker runs an initial testing server and some basic UI is under development.
+
+### Completed
+- Created the initial Docker Compose configuration to support the development environment.
+- Set up the Node.js project with package.json and installed some packages
+- Created intial Express server.
+- Configured Docker to run the Node.js application and Postgres database.
+- Fixed database initialization issues and successfully initialized the database.
+- Created the initial database schema.
+- Created the initial Handlebars views.
+- Added reusable header and footer Handlebars partials.
+- Added the Upcoming Deadlines HTML and CSS.
+- Added initial Login and Register HTML pages.
+
+### Known issues
+- Krishiv Singh has still not attended class, and his GitHub username and email are missing from the proposal.
+- The partials and pages are currently being completely and will soon be linked to the server.
+
+
+
 ## Week 1 (October 20 to October 26, 2026)
 
-**Status:** planning and design. No application code has been released yet.
+**Status:** Planning and design. No application code has been released yet.
 
 ### Completed
 - Created the public repository with the required layout: `TeamMeetingLogs`, `MilestoneSubmissions`, `ProjectSourceCode` (with its `.gitignore`) and `ReadMe.md`. All team members were added as collaborators.
