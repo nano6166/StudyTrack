@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS courses (
 CREATE TABLE IF NOT EXISTS assignments (
     id SERIAL PRIMARY KEY,
     ownername VARCHAR(100) NOT NULL,
+    course_id INT REFERENCES courses(id) ON DELETE CASCADE,
     name VARCHAR(100),
     description VARCHAR(200) NOT NULL,
 
