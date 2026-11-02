@@ -3,6 +3,13 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(200) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS courses (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
+    code VARCHAR(20) NOT NULL,
+    name VARCHAR(100)
+);
+
 CREATE TABLE IF NOT EXISTS assignments (
     id SERIAL PRIMARY KEY,
     ownername VARCHAR(100) NOT NULL,

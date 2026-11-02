@@ -1,0 +1,16 @@
+body {
+  background-color: #f4f6fb;
+  color: #202938;
+}
+
+.courses-page {
+  max-width: 900px;
+  margin: 48px auto;
+}
+
+.courses-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 4%);
+}
