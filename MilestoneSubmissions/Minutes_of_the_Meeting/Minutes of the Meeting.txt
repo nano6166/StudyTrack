@@ -1,0 +1,30 @@
+Minute meeting notes October 26, 2026
+
+Nate
+-Wrote team meeting section
+-Discussed with team communication method and preferences
+-Discussed technology stack we plan to use.
+
+Marcus
+-Added email to project proposal and also reviewed project proposal.
+-Created wireframe and discussed what each wireframe contains. Went in details for about each page.
+-Also discussed how the AI part of our project fits in.
+-Also discusses general user flow for the application.
+
+Lucas
+-Added meeting plan and help coordinate which days we will meet.
+-Discussed AGILE method and our plan for the meeting board.
+-Discussed how we plan to use the repository, different branches, review process, etc.
+-Discussed how we plan to divide the app.
+
+
+Nathan
+-Committed wireframe and design document.
+-Discussed database and application design.
+-Discussed password hashing and app security.
+
+Decisions made
+We mostly summarized our progress and did not make any major decisions.
+
+Follow up items
+No release notes this week, we need to create these next week.
