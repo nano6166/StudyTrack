@@ -19,6 +19,7 @@ const db = pgp({
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "views/pages")));
 app.use(require("./routes/courses")(db));
+app.use(require("./routes/auth")(db));
 
 app.get('/', (req, res) => {
     res.send('This page is under construction!');

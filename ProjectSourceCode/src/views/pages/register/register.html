@@ -28,14 +28,8 @@
         <form id="registerForm" novalidate>
           <div class="mb-3">
             <label for="username" class="form-label small mb-1">Username</label>
-            <input id="username" name="username" type="text" class="form-control" autocomplete="name" required>
+            <input id="username" name="username" type="text" class="form-control" autocomplete="username" maxlength="100" required>
             <div id="usernameFeedback" class="invalid-feedback"></div>
-          </div>
-
-          <div class="mb-3">
-            <label for="email" class="form-label small mb-1">Email</label>
-            <input id="email" name="email" type="email" class="form-control" autocomplete="email" required>
-            <div id="emailFeedback" class="invalid-feedback"></div>
           </div>
 
           <div class="mb-3">
@@ -64,5 +58,7 @@
       </p>
     </div>
   </main>
+
+  <script src="register.js"></script>
 </body>
 </html>
