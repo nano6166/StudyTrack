@@ -17,6 +17,19 @@ Result: Not run
 
 #User Accpetance Test 2
 
+As a user I should be able to see the assignment status.
 
+Acceptance Criteria
+When viewing an assignemnt it should show me whether or not it is completed.
+
+ideally, this is done in a test enviorment that is as close as possible to the productioin enviorment.
+
+Our testers will be students at CU Boulder.
+
+Success: The user is logged in and has already added at least one assignment as a precondition. Upon viwing the assignment they can see the correct status and the status saves correctly when they change it.
+
+Fail: The user is logged in and has already added at least one assignment as a precondition. They either don't see the assignment status or it isn't saved when they change it.
+
+Result: Not run
 
 #User Accpetance Test 3
