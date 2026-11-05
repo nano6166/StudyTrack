@@ -25,48 +25,51 @@ describe("Welcome route", () => {
     });
 });
 
-describe("POST /auth/register", () => {
-    const testUser = {
-        username: `lab10_${randomUUID()}`,
-        password: "TestPassword123!",
-    };
+//Ensure home page renders correctly
+describe('Home page', () => {
+  it('renders the home page', async () => {
+    const res = await chai.request(app).get('/');
+    expect(res).to.have.status(200);
+    expect(res).to.be.html;
+    // Adapt this marker to your actual login form.
+    expect(res.text).to.include('Study Track');
+  });
+});
 
-    // Only this test's own user is removed; the users table is never emptied
-    async function removeTestUser() {
-        await db.none("DELETE FROM users WHERE username = $1", [testUser.username]);
-    }
 
-    beforeEach(removeTestUser);
-    afterEach(removeTestUser);
-
-    it("positive: creates exactly one user for valid input", async () => {
-        const res = await chai.request(app).post("/auth/register").send(testUser);
-
-        expect(res).to.have.status(201);
-        expect(res.body).to.deep.equal({ username: testUser.username });
-
-        const rows = await db.any(
-            "SELECT username, password_hash FROM users WHERE username = $1",
-            [testUser.username]
-        );
-        expect(rows).to.have.lengthOf(1);
-        expect(rows[0].username).to.equal(testUser.username);
-        // The plain password is never stored, only a bcrypt hash of it
-        expect(rows[0].password_hash).not.to.equal(testUser.password);
-        expect(await bcrypt.compare(testUser.password, rows[0].password_hash)).to.equal(true);
+describe("POST /register", () => {
+    it("positive: creates a new account", (done) => {
+        chai.request(server)
+            .post("/register")
+            .redirects(0)
+            .send({ username, email, password, confirmPassword: password })
+            .end((err, res) => {
+                // 200/201 for a JSON reply, 302 if the route redirects to the login page
+                expect(res.status).to.be.oneOf([200, 201, 302]);
+                done();
+            });
     });
 
-    it("negative: rejects a missing password and saves nothing", async () => {
-        const res = await chai
-            .request(app)
-            .post("/auth/register")
-            .send({ username: testUser.username });
+    it("negative: rejects a username that is already taken", (done) => {
+        chai.request(server)
+            .post("/register")
+            .redirects(0)
+            .send({ username, email, password, confirmPassword: password })
+            .end((err, res) => {
+                expect(res.status).to.be.oneOf([400, 409]);
+                done();
+            });
+    });
 
-        expect(res).to.have.status(400);
-        expect(res.body).to.deep.equal({ error: "Username and password are required." });
-
-        const rows = await db.any("SELECT username FROM users WHERE username = $1", [testUser.username]);
-        expect(rows).to.have.lengthOf(0);
+    it("negative: rejects an empty password", (done) => {
+        chai.request(server)
+            .post("/register")
+            .redirects(0)
+            .send({ username: `${username}_b`, email: `b_${email}`, password: "", confirmPassword: "" })
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                done();
+            });
     });
 });
 

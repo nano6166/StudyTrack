@@ -52,10 +52,9 @@ app.use(express.static(path.join(__dirname, "views")));
 app.use("/database", dbRouterFactory(db));
 app.use("/courses", coursesRoutes(db));
 
-// Lab 10 additions (Nathan): connect the register/login routes and add the sample /welcome route
-app.use("/", authRoutes(db));
-app.get("/welcome", (req, res) => {
-    res.json({ status: "success", message: "Welcome!" });
+//Test route for lab 10
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
 });
 
 // Display login page
