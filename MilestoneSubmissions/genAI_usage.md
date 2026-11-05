@@ -126,3 +126,11 @@ I put it into the server and gaave it mock data and ensured i could access the r
 
 - **My own check:** 
 I put it into the server and gaave it mock data and ensured i could access the routes via postman.
+
+Tool used: Claude (Anthropic)
+
+## Interaction (Lab 10, testing)
+- **What I asked:** Help with Lab 10. I asked Claude to compare the lab requirements with our repository and to finish my story #22 (automated tests for register and login).
+- **What it produced:** `src/validateRegistration.js`, `test/validation.spec.js`, a new `test/server.spec.js` (welcome, register, login and the extra credit course tests), `test/helpers/db.js`, `test/README.md`, `.env.test.example` and a draft of `milestones/uat-plan.md`. In teammates' files it only added lines: `server.js` now connects the auth routes and has a `/welcome` route, and the register route in `auth.js` calls `validateRegistration` first.
+- **How it was verified:** Claude ran the suite twice against an empty PostgreSQL test database built from `create.sql`. All 10 tests passed both times, and no test users were left in the database. It also made a deliberate defect in the validation function, saw one test fail, and undid the change.
+- **My own check:** TODO - describe running the Docker test commands yourself and what you reviewed in the UAT plan.

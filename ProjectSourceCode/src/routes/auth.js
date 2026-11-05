@@ -1,12 +1,19 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const path = require("path");
+const validateRegistration = require("../validateRegistration"); // Lab 10
 
 module.exports = (db) => {
     const router = express.Router();
 
     // Create an account and sign the new user in
     router.post("/auth/register", async (req, res) => {
+        // Lab 10: shared validation function (unit tested in test/validation.spec.js)
+        const validationError = validateRegistration(req.body);
+        if (validationError) {
+            return res.status(400).json({ error: validationError });
+        }
+
         const { username = "", password = "" } = req.body || {};
         const name = String(username).trim();
 
