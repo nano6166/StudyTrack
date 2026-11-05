@@ -9,6 +9,7 @@ const fs = require('fs')
 // Route imports
 const authRoutes = require("./routes/auth");
 const coursesRoutes = require("./routes/courses");
+const dbRouterFactory = require("./routes/DatabaseRouterFactory.js")
 
 const app = express();
 const PORT = 3000;
@@ -48,7 +49,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, "views")));
 
 // Routes
-//app.use("/", authRoutes(db));
+app.use("/database", dbRouterFactory(db));
 app.use("/courses", coursesRoutes(db));
 
 // Display login page
