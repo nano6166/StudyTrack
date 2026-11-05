@@ -1,35 +1,5 @@
-#User Accpetance Test 1
-
-A user can add a course and then see their assignments.
-
-Acceptance Criteria
-All of the assignmetns correctly appear on the dashboard/course interface.
-
-This will be done in a test enviorment that is as close as possible to the productioin enviorment.
-
-Our testers will ideally be students at CU Boulder.
-
-Success: The user is logged in as a precondition, adds a course, and sees all the assignments.
-
-Fail: the user is logged in, adds a course and only sees some or none of the assignemnts. 
-
-Result: Not run
-
-#User Accpetance Test 2
-
-As a user I should be able to see the assignment status.
-
-Acceptance Criteria
-When viewing an assignemnt it should show me whether or not it is completed.
-
-ideally, this is done in a test enviorment that is as close as possible to the productioin enviorment.
-
-Our testers will be students at CU Boulder.
-
-Success: The user is logged in and has already added at least one assignment as a precondition. Upon viwing the assignment they can see the correct status and the status saves correctly when they change it.
-
-Fail: The user is logged in and has already added at least one assignment as a precondition. They either don't see the assignment status or it isn't saved when they change it.
-
-Result: Not run
-
-#User Accpetance Test 3
+| **Test ID** | **Feature / requirement** | **Acceptance criterion** | **Preconditions** | **Test data** | **User steps** | **Expected result** | **Tester ID** | **Actual result** | **Status** | **Issue / follow-up** |
+|---|---|---|---|---|---|---|---|---|---|---|
+| UAT-01 | Course creation and assignment display | All assignments associated with a course correctly appear on the dashboard/course interface. | User is logged in. Testing is performed in an environment as close as possible to production. | A valid course containing multiple assignments. | 1. Log in. 2. Add a course. 3. Navigate to the dashboard or course interface. 4. Review the displayed assignments. | The course is successfully added, and all associated assignments appear on the dashboard/course interface. | Planned: CU Boulder student | Not run | Not run | None yet |
+| UAT-02 | Assignment completion status | Each assignment displays whether it is completed, and changes to its completion status are saved correctly. | User is logged in and has already added at least one assignment. Testing is performed in an environment as close as possible to production. | An existing assignment with a known completion status. | 1. Log in. 2. Navigate to an existing assignment. 3. View its completion status. 4. Change the completion status. 5. Navigate away and return to verify the change was saved. | The assignment displays its correct completion status. When the user changes the status, the change is saved and persists when the assignment is reopened. | Planned: CU Boulder student | Not run | Not run | None yet |
+| UAT-03 | When the user views the semester statics it accurately adds all staticics. | The semester totals are shown and are all accurate. | The page is open and the user has interacted with the website in such a way that statistics should have been generated. | 1.Open website and login. 2. Add a course/assignemnt 3. Go to semester/lifetime totals page and view the statistics. | The user sees the correct totals and doesn't encounter any errors when attempting to reach the page. | Planned: CU Boulder students | Not assigned | Not run | Not run |. None yet |
