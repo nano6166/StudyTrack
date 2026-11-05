@@ -112,3 +112,17 @@ The AI didn't generate any code. So i just moved the package json to the project
 
 - **My own check:** 
 I ran the docker compose file and verified the server started correctly.
+
+
+Tool used: Chat GPT
+
+## Interaction 1
+- **What I asked:** Help me reformat my router in to a better OOP like pattern.
+- **What it produced:** 
+If produced a router using the factory pattern with dependency injection.
+
+- **How it was verified:** 
+I put it into the server and gaave it mock data and ensured i could access the routes via postman.
+
+- **My own check:** 
+I put it into the server and gaave it mock data and ensured i could access the routes via postman.
