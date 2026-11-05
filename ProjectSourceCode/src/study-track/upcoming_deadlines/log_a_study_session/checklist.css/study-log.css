@@ -1,0 +1,43 @@
+body {
+  background: #f4f6fb;
+  color: #202938;
+}
+
+.study-page {
+  max-width: 900px;
+  margin: 48px auto;
+}
+
+.study-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 4%);
+}
+
+.total-label {
+  margin: 20px 0;
+  padding: 16px;
+  background: #eff6ff;
+  border-radius: 10px;
+  color: #1e40af;
+}
+
+#totalTime {
+  font-weight: 700;
+}
+
+.table > :not(caption) > * > * {
+  padding: 14px;
+}
+
+@media (max-width: 576px) {
+  .study-page {
+    margin: 24px auto;
+  }
+
+  .study-card {
+    padding: 20px;
+  }
+}
