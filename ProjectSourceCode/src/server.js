@@ -18,8 +18,8 @@ const pgp = pgPromise();
 
 const DBName = "studytrack";
 
-const db = pgp({
-    host: process.env.DB_HOST || "localhost",
+const db = pgp({ 
+    host: process.env.DB_HOST || "db", //Host MUST be 'db' since pg runs in seperate docker container, not in our current container on our loacl network.
     port: 5432,
     database: DBName,
     user: "postgres",
@@ -51,6 +51,7 @@ app.use(express.static(path.join(__dirname, "views")));
 // Routes
 app.use("/database", dbRouterFactory(db));
 app.use("/courses", coursesRoutes(db));
+app.use("/auth", authRoutes(db));
 
 //Test route for lab 10
 app.get('/welcome', (req, res) => {
@@ -75,7 +76,7 @@ app.get("/login", (req, res) => {
 // Display registration page
 app.get("/register", (req, res) => {
     res.sendFile(
-        path.join(__dirname, "../views/pages/register/register.html")
+        path.join(__dirname, "/views/pages/register/register.html")
     );
 });
 

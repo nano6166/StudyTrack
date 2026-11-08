@@ -7,7 +7,8 @@ module.exports = (db) => {
     const router = express.Router();
 
     // Create an account and sign the new user in
-    router.post("/auth/register", async (req, res) => {
+    router.post("/register", async (req, res) => {
+        console.log("regsitering new account")
         // Lab 10: shared validation function (unit tested in test/validation.spec.js)
         const validationError = validateRegistration(req.body);
         if (validationError) {
@@ -45,7 +46,7 @@ module.exports = (db) => {
     });
 
     // Check credentials and start a session
-    router.post("/auth/login", async (req, res) => {
+    router.post("/login", async (req, res) => {
         const { username = "", password = "" } = req.body || {};
         const name = String(username).trim();
 
@@ -71,7 +72,7 @@ module.exports = (db) => {
     });
 
     // End the session
-    router.post("/auth/logout", (req, res) => {
+    router.post("/logout", (req, res) => {
         req.session.destroy(() => res.status(204).end());
     });
 
