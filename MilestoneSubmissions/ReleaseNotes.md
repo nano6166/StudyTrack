@@ -2,6 +2,33 @@
 
 Team 013-3 (The Enchanters). A new section is added at the top of this file before each weekly TA meeting.
 
+**# StudyTrack Release Notes**
+
+Team 013-3 (The Enchanters). A new section is added at the top of this file before each weekly TA meeting.
+
+**## Week 3 (November 3 to November 9, 2026)**
+
+**\*\*Status:\*\*** The application now has an initial working server and database. Register functionality has been itnegrated with the database, additional pages and client-side scripts have been developed, and some unit tests have been added.
+
+**### Completed**
+- Integrated the authentication routes with the Express server and fixed database connection issues.
+- Added the Home page and configured server routes to serve application pages, including the Login page.
+- Added the Logout page and corresponding login/logout files.
+- Created HTML, CSS, and JavaScript files for assignments, projects, and exams.
+- Added the study-log JavaScript file, along with its corresponding HTML and CSS.
+- Added the checklist JavaScript file.
+- Created the semester totals page and began implementing its associated JavaScript.
+- Added database router functionality and mock data to support development and testing.
+- Installed Mocha and Chai for automated testing.
+- Added the Lab 10 test setup and user acceptance testing plan.
+- Created three user acceptance tests and corrected an issue in the third test.
+- Reformatted the user acceptance tests into a table.
+- Added a test Dockerfile.
+
+**### Known issues**
+- Krishiv Singh has still not attended class, and his GitHub username and email are missing from the proposal.
+- Some application pages and features are still under development and require more integration and testing.
+
 ## Week 2 (October 27 to November 2, 2026)
 
 **Status:** Docker runs an initial testing server and some basic UI is under development.

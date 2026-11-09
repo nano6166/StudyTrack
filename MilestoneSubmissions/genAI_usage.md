@@ -134,3 +134,25 @@ Tool used: Claude (Anthropic)
 - **What it produced:** `src/validateRegistration.js`, `test/validation.spec.js`, a new `test/server.spec.js` (welcome, register, login and the extra credit course tests), `test/helpers/db.js`, `test/README.md`, `.env.test.example` and a draft of `milestones/uat-plan.md`. In teammates' files it only added lines: `server.js` now connects the auth routes and has a `/welcome` route, and the register route in `auth.js` calls `validateRegistration` first.
 - **How it was verified:** Claude ran the suite twice against an empty PostgreSQL test database built from `create.sql`. All 10 tests passed both times, and no test users were left in the database. It also made a deliberate defect in the validation function, saw one test fail, and undid the change.
 - **My own check:** TODO - describe running the Docker test commands yourself and what you reviewed in the UAT plan.
+
+
+Tool used: Chat GPT
+
+## Interaction (Relese notes)
+- **What I asked:** 
+Append release note for week 3 to this document in the following structure. Output valid markdown in the same format as the current document and put at least 4 bullets in the completed section
+
+
+Current document:
+
+'Release Notes.md'
+
+Relevant commit history and other comments
+
+
+- **What it produced:** 
+Another chunk of relase notes for week 3 which I appeneded to the current release notes.
+
+- **How it was verified:** I read through all the release notes and changed or removed inaccuracies. 
+
+- **My own check:**I read through all the release notes and changed or removed inaccuracies. 
