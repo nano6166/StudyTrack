@@ -1,0 +1,30 @@
+Meeting Minutes
+
+What we did
+We have login and registration interface
+App shows course interface
+
+Nate
+-Started working on semester totals page
+-Integrated parts of login system that Marcus and Lucas worked on
+
+Marcus
+-Created login and register pages
+-Created auth
+-Worked on logout
+
+Nathan
+-Created add course API
+-Worked on updating, editing, and deleting courses
+-Tested login and registration
+
+Lucas
+-Created checklist js file
+-Added html, css, and js for add assignment tab
+-Worked on login and logout system
+
+
+What we need to do
+-Course page is still under development
+-Finish and add semester totals page to overall application 
+
