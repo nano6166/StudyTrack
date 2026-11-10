@@ -80,6 +80,12 @@ app.get("/register", (req, res) => {
     );
 });
 
+app.get("/semTotals", (req, res) => {
+    res.sendFile(
+        path.join(__dirname, "/views/pages/SemesterTotals/SemesterTotals.html")
+    );
+})
+
 app.get("/", (req, res) => {
     res.sendFile(
         path.join(__dirname, "views/pages/Home/home.html")
