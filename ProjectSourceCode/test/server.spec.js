@@ -71,7 +71,65 @@ describe("POST /register", () => {
                 done();
             });
     });
+}); 
+
+//Database router test using mock data (TODO update so this doensn't depend on mocking once DB routing is implemented)
+
+describe('GET /getTotalCourses', function () {
+        it('should return the total number of courses', function () {
+
+            chai.request(app)
+                .get('/database/getTotalCourses')
+                .end((err, res) => {
+                        expect(res.status).to.equal(200);
+
+                        //From mock data
+                        expect(res.body).to.deep.equal({
+                            total_courses: 10
+                        });
+
+                        done();
+                });
+        });
 });
+
+describe('GET /getLifetimeStudyAssignments', function () {
+    it('should return the total number of courses', function () {
+
+        chai.request(app)
+            .get('/database/getLifetimeStudyAssignments')
+            .end((err, res) => {
+                    expect(res.status).to.equal(200);
+
+                    //From mock data
+                    expect(res.body).to.deep.equal(
+                    [{name: 'A1', 'description': 'A hard assignemnt'}]
+                    );
+
+                    done();
+            });
+    });
+});
+
+//This endpoint is currently unused, but may be used in a few days dpending on how we format our courses page
+describe('GET /getLifetiemStudyMinutes', function () {
+    it('should return the total number of courses', function () {
+
+        chai.request(app)
+            .get('/database/getLifetiemStudyMinutes')
+            .end((err, res) => {
+                    expect(res.status).to.equal(200);
+
+                    //From mock data
+                    expect(res.body).to.deep.equal(
+                        42
+                    );
+
+                    done();
+            });
+    });
+});
+
 
 describe("POST /auth/login", () => {
     const testUser = {
