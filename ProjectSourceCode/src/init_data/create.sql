@@ -25,6 +25,23 @@ CREATE TABLE IF NOT EXISTS assignments (
     CONSTRAINT ownername FOREIGN KEY (ownername) REFERENCES users(username)
 );
 
+-- One row per study session logged against an assignment (story #17)
+CREATE TABLE IF NOT EXISTS study_sessions (
+    id SERIAL PRIMARY KEY,
+    assignment_id INT NOT NULL REFERENCES assignments(id) ON DELETE CASCADE,
+    study_date DATE NOT NULL,
+    minutes INT NOT NULL CHECK (minutes > 0 AND minutes <= 1440)
+);
+
+-- Smaller steps for one assignment, made by "Generate with AI" (story #23)
+CREATE TABLE IF NOT EXISTS tasks (
+    id SERIAL PRIMARY KEY,
+    assignment_id INT NOT NULL REFERENCES assignments(id) ON DELETE CASCADE,
+    position INT NOT NULL,
+    text VARCHAR(200) NOT NULL,
+    suggested_date DATE,
+    completed BOOLEAN NOT NULL DEFAULT FALSE
+);
 
 INSERT INTO assignments (ownername, course_id, name, description, due_date, status)
 VALUES

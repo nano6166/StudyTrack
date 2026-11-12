@@ -1,4 +1,6 @@
 const express = require("express");
+// Story #23: the AI call lives in its own module so tests can replace it
+const breakdown = require("../ai/breakdown");
 
 // JSON routes for the Courses page. The page itself is src/views/pages/courses/courses.html
 // Allowed values for assignments.status
@@ -10,7 +12,7 @@ module.exports = (db) => {
     const router = express.Router();
 
     // Every course route needs a signed-in user
-    router.use(["/api/courses", "/api/assignments", "/api/deadlines", "/api/sessions"], (req, res, next) => {
+    router.use(["/api/courses", "/api/assignments", "/api/deadlines", "/api/sessions", "/api/tasks"], (req, res, next) => {
         if (!req.session || !req.session.user) {
             return res.status(401).json({ error: "Please sign in first." });
         }
@@ -277,6 +279,82 @@ module.exports = (db) => {
             return res.status(404).json({ error: "Session not found." });
         }
         res.status(204).end();
+    });
+
+    // ---- AI task breakdown (story #23) and checking tasks off (story #19) ----
+    // The task list uses the same shape as the checklist page: { assignmentTitle, tasks: [{ id, text, completed }] }
+    async function taskList(assignment) {
+        const tasks = await db.any(
+            `SELECT id, text, to_char(suggested_date, 'YYYY-MM-DD') AS "suggestedDate", completed
+             FROM tasks WHERE assignment_id = $1 ORDER BY position, id`,
+            [assignment.id]
+        );
+        return { assignmentId: assignment.id, assignmentTitle: assignment.name || assignment.description, tasks };
+    }
+
+    // The assignment's current task list (empty until the user presses Generate with AI)
+    router.get("/api/assignments/:id/tasks", async (req, res) => {
+        const assignment = await findAssignment(req.params.id, req.session.user.username);
+        if (!assignment) {
+            return res.status(404).json({ error: "Assignment not found." });
+        }
+        res.json(await taskList(assignment));
+    });
+
+    // Ask the AI for steps and replace the assignment's task list with them
+    router.post("/api/assignments/:id/tasks/generate", async (req, res) => {
+        const assignment = await db.oneOrNone(
+            `SELECT a.id, a.name, a.description, to_char(a.due_date, 'YYYY-MM-DD') AS "dueDate", c.code AS course
+             FROM assignments a JOIN courses c ON c.id = a.course_id
+             WHERE a.id = $1 AND a.ownername = $2`,
+            [req.params.id, req.session.user.username]
+        );
+        if (!assignment) {
+            return res.status(404).json({ error: "Assignment not found." });
+        }
+
+        const today = await db.one(`SELECT to_char((now() AT TIME ZONE 'America/Denver')::date, 'YYYY-MM-DD') AS d`);
+        let steps;
+        try {
+            steps = await breakdown.generateSteps({
+                title: assignment.name || assignment.description,
+                description: assignment.description,
+                course: assignment.course,
+                dueDate: assignment.dueDate,
+                today: today.d,
+            });
+        } catch (err) {
+            return res.status(502).json({ error: err.message });
+        }
+
+        await db.tx(async (t) => {
+            await t.none("DELETE FROM tasks WHERE assignment_id = $1", [assignment.id]);
+            for (const [i, step] of steps.entries()) {
+                await t.none(
+                    "INSERT INTO tasks (assignment_id, position, text, suggested_date) VALUES ($1, $2, $3, $4)",
+                    [assignment.id, i + 1, step.text, step.suggestedDate]
+                );
+            }
+        });
+        res.status(201).json(await taskList(assignment));
+    });
+
+    // Check a task off, or un-check it. Body: { completed: true | false }
+    router.patch("/api/tasks/:id", async (req, res) => {
+        const { completed } = req.body || {};
+        if (typeof completed !== "boolean") {
+            return res.status(400).json({ error: "completed must be true or false." });
+        }
+        const task = await db.oneOrNone(
+            `UPDATE tasks t SET completed = $1 FROM assignments a
+             WHERE t.id = $2 AND t.assignment_id = a.id AND a.ownername = $3
+             RETURNING t.id, t.text, to_char(t.suggested_date, 'YYYY-MM-DD') AS "suggestedDate", t.completed`,
+            [completed, req.params.id, req.session.user.username]
+        );
+        if (!task) {
+            return res.status(404).json({ error: "Task not found." });
+        }
+        res.json(task);
     });
 
     return router;

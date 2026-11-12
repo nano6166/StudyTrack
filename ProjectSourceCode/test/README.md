@@ -10,6 +10,7 @@ The tests use Mocha 10.8.2, Chai 4.5.0 and Chai HTTP 4.4.0. They run against a s
 | `test/helpers/db.js` | Helper | Database connection the tests use to check and clean up rows |
 | `test/auth.spec.js` | API integration | `POST /auth/register`, `POST /auth/login`, `POST /courses/api/courses` (Lab 10 extra credit, story #22) |
 | `test/assignment-sessions.spec.js` | API integration | Study sessions: log, list with total and delete (`/courses/api/assignments/:id/sessions`) |
+| `test/assignment-tasks.spec.js` | Unit + API integration | AI task breakdown with a fake AI reply, and checking tasks off (`/courses/api/assignments/:id/tasks`) |
 | `test/deadlines.spec.js` | API integration | `/courses/api/deadlines`: list, filter by course, add and delete deadlines |
 | `test/server.spec.js` | API integration | `/welcome`, the home page and the `/database` routes |
 

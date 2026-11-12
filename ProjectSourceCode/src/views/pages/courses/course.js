@@ -55,6 +55,13 @@ function createRow(assignment) {
   titleCell.appendChild(title);
   updateBadges(titleCell, assignment);
 
+  // Story #23: link to the AI task breakdown for this assignment
+  const breakdownLink = document.createElement("a");
+  breakdownLink.href = `../tasks/tasks.html?assignment=${assignment.id}`;
+  breakdownLink.className = "d-block small";
+  breakdownLink.textContent = "Break into smaller tasks";
+  titleCell.appendChild(breakdownLink);
+
   const dueCell = document.createElement("td");
   dueCell.textContent = assignment.due_date || "No due date";
 
