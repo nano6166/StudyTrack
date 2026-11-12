@@ -80,7 +80,7 @@ function createRow(assignment) {
     errorMessage.hidden = true;
     select.disabled = true;
     try {
-      const updated = await request(`/api/assignments/${assignment.id}/status`, {
+      const updated = await request(`/courses/api/assignments/${assignment.id}/status`, {
         method: "PATCH",
         body: JSON.stringify({ status: select.value })
       });
@@ -108,7 +108,7 @@ async function loadAssignments() {
 
   status.textContent = "Loading assignments...";
   try {
-    const { course, assignments } = await request(`/api/courses/${encodeURIComponent(courseId)}/assignments`);
+    const { course, assignments } = await request(`/courses/api/courses/${encodeURIComponent(courseId)}/assignments`);
 
     courseTitle.textContent = course.name ? `${course.code}, ${course.name}` : course.code;
     document.title = `Study Track | ${course.code}`;

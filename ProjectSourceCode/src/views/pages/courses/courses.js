@@ -1,4 +1,5 @@
-const API_URL = "/api/courses";
+// The server mounts the courses router at /courses (src/server.js), so the JSON routes live under /courses/api
+const API_URL = "/courses/api/courses";
 
 const form = document.querySelector("#addCourseForm");
 const codeInput = document.querySelector("#code");
