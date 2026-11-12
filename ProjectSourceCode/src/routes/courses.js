@@ -3,12 +3,14 @@ const express = require("express");
 // JSON routes for the Courses page. The page itself is src/views/pages/courses/courses.html
 // Allowed values for assignments.status
 const STATUSES = ["Not started", "In progress", "Done"];
+// Allowed values for assignments.type (the Add assignment, project or exam page)
+const TYPES = ["assignment", "project", "exam"];
 
 module.exports = (db) => {
     const router = express.Router();
 
     // Every course route needs a signed-in user
-    router.use(["/api/courses", "/api/assignments"], (req, res, next) => {
+    router.use(["/api/courses", "/api/assignments", "/api/deadlines"], (req, res, next) => {
         if (!req.session || !req.session.user) {
             return res.status(401).json({ error: "Please sign in first." });
         }
@@ -122,6 +124,90 @@ module.exports = (db) => {
             return res.status(404).json({ error: "Assignment not found." });
         }
         res.json(assignment);
+    });
+
+    // ---- Deadlines (assignments, projects and exams) for the deadline pages ----
+    // These live under /courses/api/deadlines because the server mounts this router at /courses.
+    // Each deadline is a row in the assignments table.
+    const DEADLINE_COLUMNS = `
+        a.id, a.course_id AS "courseId", c.code AS course, a.name AS title, a.type,
+        to_char(a.due_date, 'YYYY-MM-DD') AS "dueDate",
+        to_char((a.due_date + TIME '23:59') AT TIME ZONE 'America/Denver' AT TIME ZONE 'UTC',
+                'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS "dueAt",
+        a.status, (a.status = 'Done') AS completed`;
+
+    // List the signed-in user's deadlines, earliest first.
+    // Optional ?courseId=<id> shows one course only (story #14, filter deadlines by course).
+    router.get("/api/deadlines", async (req, res) => {
+        const { courseId } = req.query;
+        if (courseId !== undefined && !/^\d+$/.test(courseId)) {
+            return res.status(400).json({ error: "courseId must be a course id number." });
+        }
+
+        const deadlines = await db.any(
+            `SELECT ${DEADLINE_COLUMNS}
+             FROM assignments a JOIN courses c ON c.id = a.course_id
+             WHERE c.username = $1 AND a.due_date IS NOT NULL
+               AND ($2::int IS NULL OR a.course_id = $2::int)
+             ORDER BY a.due_date, a.id`,
+            [req.session.user.username, courseId === undefined ? null : Number(courseId)]
+        );
+        res.json(deadlines);
+    });
+
+    // Add a deadline to one of the user's courses. Body: { courseId, title, type, dueDate: "YYYY-MM-DD" }
+    router.post("/api/deadlines", async (req, res) => {
+        const { courseId, title = "", type = "assignment", dueDate = "" } = req.body || {};
+        const name = String(title).trim();
+
+        if (!name || !dueDate) {
+            return res.status(400).json({ error: "Please enter a title and due date." });
+        }
+        if (name.length > 100) {
+            return res.status(400).json({ error: "Title is too long." });
+        }
+        if (!TYPES.includes(type)) {
+            return res.status(400).json({ error: `Type must be one of: ${TYPES.join(", ")}.` });
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dueDate) || Number.isNaN(Date.parse(dueDate))) {
+            return res.status(400).json({ error: "Due date must look like 2026-11-30." });
+        }
+        if (!/^\d+$/.test(String(courseId))) {
+            return res.status(400).json({ error: "Choose a course." });
+        }
+
+        // The course must belong to the signed-in user
+        const course = await db.oneOrNone(
+            "SELECT id FROM courses WHERE id = $1 AND username = $2",
+            [courseId, req.session.user.username]
+        );
+        if (!course) {
+            return res.status(404).json({ error: "Course not found." });
+        }
+
+        const { id } = await db.one(
+            `INSERT INTO assignments (ownername, course_id, name, description, due_date, type)
+             VALUES ($1, $2, $3, '', $4, $5) RETURNING id`,
+            [req.session.user.username, course.id, name, dueDate, type]
+        );
+        const deadline = await db.one(
+            `SELECT ${DEADLINE_COLUMNS}
+             FROM assignments a JOIN courses c ON c.id = a.course_id WHERE a.id = $1`,
+            [id]
+        );
+        res.status(201).json(deadline);
+    });
+
+    // Delete one of the user's deadlines
+    router.delete("/api/deadlines/:id", async (req, res) => {
+        const result = await db.result(
+            "DELETE FROM assignments WHERE id = $1 AND ownername = $2",
+            [req.params.id, req.session.user.username]
+        );
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Deadline not found." });
+        }
+        res.status(204).end();
     });
 
     return router;

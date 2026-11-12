@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS assignments (
     due_date DATE,
     status VARCHAR(20) NOT NULL DEFAULT 'Not started'
         CHECK (status IN ('Not started', 'In progress', 'Done')),
+    type VARCHAR(20) NOT NULL DEFAULT 'assignment'
+        CHECK (type IN ('assignment', 'project', 'exam')),
 
     CONSTRAINT ownername FOREIGN KEY (ownername) REFERENCES users(username)
 );
