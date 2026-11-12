@@ -1,0 +1,28 @@
+Minute meeting notes November 2, 2026
+
+Nate
+- Worked on getting the Docker running.
+- Making initial version of database schema.
+- Got database to initialize successfully.
+
+Marcus
+- Created login and register HTML files.
+- Created login and register CSS files.
+- Working to get POST login and register routes.
+
+Lucas
+- Created check off generated test HTML and CSS files.
+- Created upcoming deadlines HTML, CSS, and JS files.
+- Working on check off generated test JS file.
+
+Nathan
+- Added Courses table and courses API.
+- Added course page
+- Added courses route in courses.js
+- Added courses table in SQL.
+- Added edit or delete course functionality.
+
+Decisions made
+
+-We summarized any progress made and showed a working demo of the server. 
+-No major decisions made.

@@ -20,7 +20,7 @@ async function loadStats() {
         const lifetime_assigments = await lifetime_assigments_res.json();
 
         document.getElementById('totalCourses').textContent = course_total.total_courses;
-        document.getElementById('lifetimeStudyAssignments').textContent = lifetime_assigments.length;
+        document.getElementById('lifetimeStudyAssignments').textContent = lifetime_assigments.total_assignments;
 
     } catch (error) {
         console.error('Error loading dashboard statistics:', error);

@@ -13,8 +13,8 @@ module.exports = (db) => {
         try {
             const query = 'SELECT COUNT(*) AS total_assignments FROM assignments;'
             const totalAssignments = await db.any(query);
-
-            res.send(totalAssignments);
+            console.log(totalAssignments)
+            res.send(totalAssignments[0]);
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: 'Failed to retrieve courses' });
