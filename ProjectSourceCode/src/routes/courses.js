@@ -10,7 +10,7 @@ module.exports = (db) => {
     const router = express.Router();
 
     // Every course route needs a signed-in user
-    router.use(["/api/courses", "/api/assignments", "/api/deadlines"], (req, res, next) => {
+    router.use(["/api/courses", "/api/assignments", "/api/deadlines", "/api/sessions"], (req, res, next) => {
         if (!req.session || !req.session.user) {
             return res.status(401).json({ error: "Please sign in first." });
         }
@@ -206,6 +206,75 @@ module.exports = (db) => {
         );
         if (result.rowCount === 0) {
             return res.status(404).json({ error: "Deadline not found." });
+        }
+        res.status(204).end();
+    });
+
+    // ---- Study sessions (story #17, Log a study session) ----
+    // A session is a date and a number of minutes, logged against one of the user's assignments.
+    function isValidDate(value) {
+        return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
+            && new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value;
+    }
+
+    // The assignment must belong to the signed-in user
+    function findAssignment(id, username) {
+        return db.oneOrNone(
+            "SELECT id, name, description FROM assignments WHERE id = $1 AND ownername = $2",
+            [id, username]
+        );
+    }
+
+    // List an assignment's sessions, newest first, with the total minutes
+    router.get("/api/assignments/:id/sessions", async (req, res) => {
+        const assignment = await findAssignment(req.params.id, req.session.user.username);
+        if (!assignment) {
+            return res.status(404).json({ error: "Assignment not found." });
+        }
+
+        const sessions = await db.any(
+            `SELECT id, to_char(study_date, 'YYYY-MM-DD') AS date, minutes
+             FROM study_sessions WHERE assignment_id = $1
+             ORDER BY study_date DESC, id DESC`,
+            [assignment.id]
+        );
+        const totalMinutes = sessions.reduce((sum, s) => sum + s.minutes, 0);
+        res.json({ assignment, sessions, totalMinutes });
+    });
+
+    // Log a session. Body: { date: "YYYY-MM-DD", minutes: whole number from 1 to 1440 }
+    router.post("/api/assignments/:id/sessions", async (req, res) => {
+        const { date, minutes } = req.body || {};
+
+        if (!isValidDate(date)) {
+            return res.status(400).json({ error: "Please enter a valid study date." });
+        }
+        if (!Number.isInteger(minutes) || minutes <= 0 || minutes > 1440) {
+            return res.status(400).json({ error: "Minutes must be a whole number from 1 to 1440." });
+        }
+
+        const assignment = await findAssignment(req.params.id, req.session.user.username);
+        if (!assignment) {
+            return res.status(404).json({ error: "Assignment not found." });
+        }
+
+        const session = await db.one(
+            `INSERT INTO study_sessions (assignment_id, study_date, minutes) VALUES ($1, $2, $3)
+             RETURNING id, to_char(study_date, 'YYYY-MM-DD') AS date, minutes`,
+            [assignment.id, date, minutes]
+        );
+        res.status(201).json(session);
+    });
+
+    // Delete one of the user's sessions
+    router.delete("/api/sessions/:id", async (req, res) => {
+        const result = await db.result(
+            `DELETE FROM study_sessions s USING assignments a
+             WHERE s.id = $1 AND s.assignment_id = a.id AND a.ownername = $2`,
+            [req.params.id, req.session.user.username]
+        );
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Session not found." });
         }
         res.status(204).end();
     });

@@ -24,3 +24,11 @@ CREATE TABLE IF NOT EXISTS assignments (
 
     CONSTRAINT ownername FOREIGN KEY (ownername) REFERENCES users(username)
 );
+
+-- One row per study session logged against an assignment (story #17)
+CREATE TABLE IF NOT EXISTS study_sessions (
+    id SERIAL PRIMARY KEY,
+    assignment_id INT NOT NULL REFERENCES assignments(id) ON DELETE CASCADE,
+    study_date DATE NOT NULL,
+    minutes INT NOT NULL CHECK (minutes > 0 AND minutes <= 1440)
+);
