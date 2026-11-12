@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Deadlines</title>
+    <link rel="stylesheet" href="filterdeadlines.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Upcoming Deadlines</h1>
+
+        <div class="filter-container">
+            <label for="courseFilter">Filter by course:</label>
+
+            <select id="courseFilter">
+                <option value="all">All courses</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Biology">Biology</option>
+                <option value="Chemistry">Chemistry</option>
+            </select>
+        </div>
+
+        <div id="deadlineList">
+
+            <div class="deadline" data-course="Computer Science">
+                <h3>Assignment 1</h3>
+                <p>Course: Computer Science</p>
+                <p>Due: November 15, 2026</p>
+            </div>
+
+            <div class="deadline" data-course="Biology">
+                <h3>Research Paper</h3>
+                <p>Course: Biology</p>
+                <p>Due: November 18, 2026</p>
+            </div>
+
+            <div class="deadline" data-course="Computer Science">
+                <h3>Programming Project</h3>
+                <p>Course: Computer Science</p>
+                <p>Due: November 20, 2026</p>
+            </div>
+
+            <div class="deadline" data-course="Chemistry">
+                <h3>Lab Report</h3>
+                <p>Course: Chemistry</p>
+                <p>Due: November 22, 2026</p>
+            </div>
+
+        </div>
+
+        <p id="emptyMessage" class="empty-message" hidden>
+            No deadlines found for this course.
+        </p>
+    </div>
+
+    <script src="filterdeadlines.js"></script>
+</body>
+</html>
