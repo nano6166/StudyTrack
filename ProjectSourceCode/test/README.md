@@ -8,7 +8,8 @@ The tests use Mocha 10.8.2, Chai 4.5.0 and Chai HTTP 4.4.0. They run against a s
 |---|---|---|
 | `test/validation.spec.js` | Unit | `src/validateRegistration.js` on its own (no HTTP server, no database) |
 | `test/helpers/db.js` | Helper | Database connection the tests use to check and clean up rows |
-| `test/server.spec.js` | API integration | `/welcome`, `POST /auth/register`, `POST /auth/login`, `POST /courses/api/courses` (extra credit) |
+| `test/auth.spec.js` | API integration | `POST /auth/register`, `POST /auth/login`, `POST /courses/api/courses` (Lab 10 extra credit, story #22) |
+| `test/server.spec.js` | API integration | `/welcome`, the home page and the `/database` routes |
 
 `src/server.js` exports the Express app and only calls `app.listen` when it is started with `npm start`, so the tests can import it without opening port 3000. The app connects to the database with its own settings (`DB_HOST`, `password`, database `studytrack`, user `postgres`). The tests read the same settings in `test/helpers/db.js` to check and clean up rows. That helper stops with an error unless `NODE_ENV=test` and `DB_HOST=db-test`, so the tests can only reach the throwaway database in `docker-compose.test.yaml`.
 
