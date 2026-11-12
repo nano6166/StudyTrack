@@ -103,7 +103,35 @@ function createRow(assignment) {
   });
 
   statusCell.append(label, select);
-  row.append(titleCell, dueCell, statusCell);
+
+  // Delete button (uses the deadlines API from routes/courses.js)
+  const actionCell = document.createElement("td");
+  actionCell.className = "text-end";
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className = "btn btn-sm btn-outline-danger";
+  deleteButton.textContent = "Delete";
+  deleteButton.setAttribute("aria-label", `Delete ${title.textContent}`);
+  deleteButton.addEventListener("click", async () => {
+    if (!confirm(`Delete ${title.textContent}? Its study sessions and tasks are deleted too.`)) return;
+    errorMessage.hidden = true;
+    deleteButton.disabled = true;
+    try {
+      const response = await fetch(`/courses/api/deadlines/${assignment.id}`, { method: "DELETE", credentials: "same-origin" });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || `Request failed: ${response.status}`);
+      }
+      await loadAssignments();
+      status.textContent = `Deleted ${title.textContent}.`;
+    } catch (error) {
+      deleteButton.disabled = false;
+      showError(error.message);
+    }
+  });
+  actionCell.appendChild(deleteButton);
+
+  row.append(titleCell, dueCell, statusCell, actionCell);
   return row;
 }
 
@@ -128,5 +156,37 @@ async function loadAssignments() {
     showError(error.message);
   }
 }
+
+// Add an assignment, project or exam to this course. It is saved in the assignments table,
+// so the deadlines, study hours and totals pages can all read it.
+const addForm = document.querySelector("#addAssignmentForm");
+const addButton = document.querySelector("#addAssignmentButton");
+
+addForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  errorMessage.hidden = true;
+
+  const title = addForm.title.value.trim();
+  const dueDate = addForm.dueDate.value;
+  if (!title || !dueDate) {
+    showError("Please enter a title and due date.");
+    return;
+  }
+
+  addButton.disabled = true;
+  try {
+    await request("/courses/api/deadlines", {
+      method: "POST",
+      body: JSON.stringify({ courseId: Number(courseId), title, type: addForm.type.value, dueDate })
+    });
+    addForm.reset();
+    await loadAssignments();
+    status.textContent = `Added ${title}.`;
+  } catch (error) {
+    showError(error.message);
+  } finally {
+    addButton.disabled = false;
+  }
+});
 
 loadAssignments();

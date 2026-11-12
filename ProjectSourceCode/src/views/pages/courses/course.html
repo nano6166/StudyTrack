@@ -20,6 +20,32 @@
       <h1 id="courseTitle" class="h2">Course</h1>
     </header>
 
+    <section class="courses-card p-3 p-md-4 mb-4" aria-labelledby="add-heading">
+      <h2 id="add-heading" class="h5 mb-3">Add an assignment, project or exam</h2>
+
+      <form id="addAssignmentForm" class="row g-2 align-items-end" novalidate>
+        <div class="col-md-5">
+          <label for="assignmentTitle" class="form-label">Title</label>
+          <input id="assignmentTitle" name="title" class="form-control" maxlength="100" required>
+        </div>
+        <div class="col-md-3">
+          <label for="assignmentType" class="form-label">Type</label>
+          <select id="assignmentType" name="type" class="form-select">
+            <option value="assignment">Assignment</option>
+            <option value="project">Project</option>
+            <option value="exam">Exam</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="assignmentDue" class="form-label">Due date</label>
+          <input id="assignmentDue" name="dueDate" type="date" class="form-control" required>
+        </div>
+        <div class="col-md-2">
+          <button id="addAssignmentButton" class="btn btn-primary w-100" type="submit">Add</button>
+        </div>
+      </form>
+    </section>
+
     <section class="courses-card p-3 p-md-4" aria-labelledby="assignments-heading">
       <h2 id="assignments-heading" class="h5 mb-3">Assignments</h2>
 
@@ -34,6 +60,7 @@
               <th scope="col">Assignment</th>
               <th scope="col">Due date</th>
               <th scope="col">Status</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
             </tr>
           </thead>
 
