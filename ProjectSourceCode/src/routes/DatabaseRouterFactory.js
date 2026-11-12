@@ -11,9 +11,15 @@ module.exports = (db) => {
 
     router.get('/getLifetimeStudyAssignments', async (req, res) => {
         try {
+            if (!req.session.user) {
+                return res.status(401).json({
+                    error: "You must be logged in"
+                });
+            }
+
             const username = req.session.user.username;
 
-            const query = 'SELECT COUNT(*) AS total_assignments FROM assignments WHERE username = $1;'
+            const query = 'SELECT COUNT(*) AS total_assignments FROM assignments WHERE ownername = $1;'
             const totalAssignments = await db.any(query,  [username]);
             console.log(totalAssignments)
             res.send(totalAssignments[0]);
@@ -29,6 +35,12 @@ module.exports = (db) => {
     router.get('/getTotalCourses', async (req, res) => {
 
          try {
+            if (!req.session.user) {
+                return res.status(401).json({
+                    error: "You must be logged in"
+                });
+            }
+
             const username = req.session.user.username;
 
             const query = `
