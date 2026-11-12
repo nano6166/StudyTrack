@@ -46,7 +46,7 @@ form.addEventListener("submit", async (event) => {
     if (!response.ok) {
       throw new Error(data.error || "Could not sign in.");
     }
-    window.location.href = "/courses/courses.html";
+    window.location.href = "/pages/courses/courses.html";
   } catch (error) {
     errorMessage.textContent = error.message;
     errorMessage.hidden = false;
