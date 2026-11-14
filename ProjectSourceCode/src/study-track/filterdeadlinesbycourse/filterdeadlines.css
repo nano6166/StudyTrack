@@ -1,0 +1,60 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+    padding: 30px;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+}
+
+h1 {
+    color: #222;
+}
+
+.filter-container {
+    margin: 20px 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    background: white;
+    cursor: pointer;
+}
+
+.deadline {
+    background: white;
+    padding: 18px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.deadline h3 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.deadline p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.empty-message {
+    color: #777;
+    padding: 20px;
+    text-align: center;
+}
