@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS assignments (
     CONSTRAINT ownername FOREIGN KEY (ownername) REFERENCES users(username)
 );
 
-<<<<<<< Updated upstream
 -- One row per study session logged against an assignment (story #17)
 CREATE TABLE IF NOT EXISTS study_sessions (
     id SERIAL PRIMARY KEY,
@@ -43,7 +42,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     suggested_date DATE,
     completed BOOLEAN NOT NULL DEFAULT FALSE
 );
-=======
+
 INSERT INTO users (username, password_hash)
 VALUES ('testuser', 'mock_password_hash');
 
@@ -53,7 +52,6 @@ VALUES
 ('testuser', 'CSCI 3403', 'Introduction to Cybersecurity'),
 ('testuser', 'MATH 2300', 'Calculus II'),
 ('testuser', 'APPM 2360', 'Differential Equations');
->>>>>>> Stashed changes
 
 INSERT INTO assignments (ownername, course_id, name, description, due_date, status)
 VALUES

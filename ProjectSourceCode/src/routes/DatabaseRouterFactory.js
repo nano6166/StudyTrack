@@ -4,9 +4,25 @@ module.exports = (db) => {
     const router = express.Router();
 
     // Routes for lifetime statistics page
-    router.get('/getLifetimeStudyMinutes', (req, res) => {
-        //mockdata
-        res.send(42);
+    router.get('/getLifetimeStudyMinutes', async (req, res) => {
+        const query = `SELECT COALESCE(SUM(ss.minutes), 0) AS total_study_minutes FROM study_sessions ss JOIN assignments a ON ss.assignment_id = a.id WHERE a.ownername = $1;`;
+
+        try {
+            if (!req.session.user) {
+                return res.status(401).json({
+                    error: "You must be logged in"
+                });
+            }
+
+            const username = req.session.user.username;
+
+            const studyMinutes = await db.any(query,  [username]);
+            console.log(studyMinutes)
+            res.send(studyMinutes);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to retrieve courses' });
+        }
     });
 
     router.get('/getLifetimeStudyAssignments', async (req, res) => {

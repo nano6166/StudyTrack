@@ -19,6 +19,23 @@ async function loadStats() {
 
         const lifetime_assigments = await lifetime_assigments_res.json();
 
+        //statisic 3
+        try{
+            const minutes_total_res = await fetch('/database/getLifetimeStudyMinutes');
+
+            if (!course_total_res.ok) {
+                throw new Error(`Failed to load total courses: ${course_total_res.status}`);
+            }
+
+            const minutes_total = await minutes_total_res.json();
+            document.getElementById('lifetimeStudyMinutes').textContent = minutes_total_res;
+        } catch (err){
+                document.getElementById('lifetimeStudyMinutes').textContent = '0';
+            console.log(err)
+        }
+
+
+
         document.getElementById('totalCourses').textContent = course_total.total_courses;
         document.getElementById('lifetimeStudyAssignments').textContent = lifetime_assigments.total_assignments;
 
