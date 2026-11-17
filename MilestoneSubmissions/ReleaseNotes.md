@@ -6,6 +6,22 @@ Team 013-3 (The Enchanters). A new section is added at the top of this file befo
 
 Team 013-3 (The Enchanters). A new section is added at the top of this file before each weekly TA meeting.
 
+**## Week 4 (November 10 to November 16, 2026)**
+
+**Status:** Login and registration are integrated with the database, courses and assignments now the database data. Semester totals page now displays statistics, and the AI based assignment task breakdown feature has been added.
+
+**### Completed**
+- Fixed login and registration routes and resolved bugs causing authentication and database problems.
+- Added database-backed login functionality and fixed issues with the registration JavaScript.
+- Updated the courses pages to use the correct routes and confirmed that pages work with real database data.
+- Added functionality to create and delete assignments directly from the course page.
+- Implemented the filter deadlines.
+- Created the study sessions API to support logging study time.
+- Added the Log Study Time page 
+- Added real data-fetching functionality and test data for application pages.
+- Connected the courses page and semester totals page.
+- Added total study minutes statistics to the semester totals page and made its styling consistent.
+
 **## Week 3 (November 3 to November 9, 2026)**
 
 **\*\*Status:\*\*** The application now has an initial working server and database. Register functionality has been itnegrated with the database, additional pages and client-side scripts have been developed, and some unit tests have been added.
