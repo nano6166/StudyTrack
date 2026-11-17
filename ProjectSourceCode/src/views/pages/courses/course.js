@@ -62,6 +62,13 @@ function createRow(assignment) {
   breakdownLink.textContent = "Break into smaller tasks";
   titleCell.appendChild(breakdownLink);
 
+  // Story #17: log study minutes for this assignment (saved to study_sessions for the totals page)
+  const studyLink = document.createElement("a");
+  studyLink.href = `../study-log/study-log.html?assignment=${assignment.id}&course=${encodeURIComponent(courseId)}`;
+  studyLink.className = "d-block small";
+  studyLink.textContent = "Log study time";
+  titleCell.appendChild(studyLink);
+
   const dueCell = document.createElement("td");
   dueCell.textContent = assignment.due_date || "No due date";
 
