@@ -1,0 +1,42 @@
+Meeting Minutes
+
+What we did
+We have login and registration interface
+App shows course interface
+Create the account page and fixed bugs for that
+We showed the My Courses page
+Add a Courses Tab
+Semester Totals Tab
+
+Nate
+-Worked on the Semester Totals Page, view the totals numbers of courses.
+-Created code to the database
+-Linked the main page to course page
+
+Marcus
+-Fixed register.js issue
+-Fixed login and register rooutes for login and register html
+
+Nathan
+-Assigment form and button
+-Working on the AI task breakdown 
+-Used free template from Google Gemini
+-Worked on the study log minutes 
+
+Lucas 
+-Worked on the filter deadlines by course tab
+-Added html, css, and js files for the filter deadlines by course
+
+
+Khrishv
+-Worked on the extra credit
+-Dowloaded passwords
+-Created an .env files and example files
+
+
+What we need to do
+-Finish and add semester totals page to overall application 
+-Work on the Canvas API
+- AI tool in the study track
+
+
