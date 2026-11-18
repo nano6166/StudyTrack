@@ -210,4 +210,43 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
+
+// Sync with Canvas: uses the token saved on the Settings page, then reloads the course list
+const syncButton = document.querySelector("#syncButton");
+const canvasConnection = document.querySelector("#canvasConnection");
+const canvasError = document.querySelector("#canvasError");
+const canvasStatus = document.querySelector("#canvasStatus");
+
+async function loadCanvasSettings() {
+  try {
+    const settings = await request("/courses/api/canvas/settings");
+    syncButton.disabled = !settings.connected;
+    canvasConnection.textContent = settings.connected
+      ? "Connected. Sync to bring in your Canvas courses and assignments with due dates."
+      : "Not connected. Add your Canvas access token on the Settings page to turn on Sync with Canvas.";
+  } catch (error) {
+    canvasConnection.textContent = "";
+  }
+}
+
+syncButton.addEventListener("click", async () => {
+  canvasError.hidden = true;
+  syncButton.disabled = true;
+  canvasStatus.textContent = "Syncing with Canvas. This can take a few seconds...";
+  try {
+    const result = await request("/courses/api/canvas/sync", { method: "POST" });
+    await loadCourses();
+    const skipped = result.skipped ? ` ${result.skipped} without a due date were skipped.` : "";
+    canvasStatus.textContent = `Synced ${result.courses} courses and ${result.assignments} assignments.${skipped}`;
+  } catch (error) {
+    canvasStatus.textContent = "";
+    canvasError.textContent = error.message;
+    canvasError.hidden = false;
+  } finally {
+    syncButton.disabled = false;
+  }
+});
+
+loadCanvasSettings();
+
 loadCourses();

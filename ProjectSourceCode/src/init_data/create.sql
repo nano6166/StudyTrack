@@ -74,3 +74,9 @@ VALUES
 ('testuser', 1, 'Final Project Proposal', 'Submit a proposal outlining the final project', '2026-12-03', 'In progress'),
 
 ('testuser', 2, 'Practice Exercises', 'Complete the additional practice exercises', '2026-12-07', 'Not started');
+
+-- Sync with Canvas: each user's Canvas token (encrypted by src/canvas/tokenStore.js), and which
+-- Canvas course or assignment a row came from, so syncing again updates the same rows instead of making copies
+ALTER TABLE users ADD COLUMN IF NOT EXISTS canvas_token TEXT;
+ALTER TABLE courses ADD COLUMN IF NOT EXISTS canvas_id VARCHAR(30);
+ALTER TABLE assignments ADD COLUMN IF NOT EXISTS canvas_id VARCHAR(30);

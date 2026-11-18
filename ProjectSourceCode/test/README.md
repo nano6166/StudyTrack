@@ -11,6 +11,7 @@ The tests use Mocha 10.8.2, Chai 4.5.0 and Chai HTTP 4.4.0. They run against a s
 | `test/auth.spec.js` | API integration | `POST /auth/register`, `POST /auth/login`, `POST /courses/api/courses` (Lab 10 extra credit, story #22) |
 | `test/assignment-sessions.spec.js` | API integration | Study sessions: log, list with total and delete (`/courses/api/assignments/:id/sessions`) |
 | `test/assignment-tasks.spec.js` | Unit + API integration | AI task breakdown with a fake AI reply, and checking tasks off (`/courses/api/assignments/:id/tasks`) |
+| `test/canvas-sync.spec.js` | Unit + API integration | Sync with Canvas with fake Canvas replies: saving the token (`/courses/api/canvas/token`) and syncing (`POST /courses/api/canvas/sync`) |
 | `test/deadlines.spec.js` | API integration | `/courses/api/deadlines`: list, filter by course, add and delete deadlines |
 | `test/server.spec.js` | API integration | `/welcome`, the home page and the `/database` routes |
 

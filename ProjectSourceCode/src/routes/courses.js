@@ -1,6 +1,10 @@
 const express = require("express");
 // Story #23: the AI call lives in its own module so tests can replace it
 const breakdown = require("../ai/breakdown");
+// Sync with Canvas: the Canvas API calls live in their own module so tests can replace them
+const canvas = require("../canvas/client");
+const { cleanCourse, cleanAssignment } = require("../canvas/importer");
+const canvasTokens = require("../canvas/tokenStore");
 
 // JSON routes for the Courses page. The page itself is src/views/pages/courses/courses.html
 // Allowed values for assignments.status
@@ -12,7 +16,7 @@ module.exports = (db) => {
     const router = express.Router();
 
     // Every course route needs a signed-in user
-    router.use(["/api/courses", "/api/assignments", "/api/deadlines", "/api/sessions", "/api/tasks"], (req, res, next) => {
+    router.use(["/api/courses", "/api/assignments", "/api/deadlines", "/api/sessions", "/api/tasks", "/api/canvas"], (req, res, next) => {
         if (!req.session || !req.session.user) {
             return res.status(401).json({ error: "Please sign in first." });
         }
@@ -210,6 +214,115 @@ module.exports = (db) => {
             return res.status(404).json({ error: "Deadline not found." });
         }
         res.status(204).end();
+    });
+
+    // ---- Sync with Canvas ----
+    // The user saves a Canvas access token on the Settings page (stored encrypted in users.canvas_token).
+    // "Sync with Canvas" on the courses page then copies their Canvas courses, and every assignment
+    // with a due date, into StudyTrack. Syncing again updates the same rows (matched by canvas_id).
+
+    // Turn a Canvas error into a response the page can show
+    function canvasFailure(res, error) {
+        const status = error.status === 401 ? 400 : 502;
+        return res.status(status).json({ error: error.message || "Could not reach Canvas." });
+    }
+
+    // Is a token saved for this user?
+    router.get("/api/canvas/settings", async (req, res) => {
+        const token = await canvasTokens.load(db, req.session.user.username);
+        res.json({ connected: Boolean(token), canvasUrl: canvas.BASE_URL });
+    });
+
+    // Save or replace the token. Body: { token }. Canvas is asked once to make sure the token works.
+    router.put("/api/canvas/token", async (req, res) => {
+        const token = String((req.body && req.body.token) || "").trim();
+        if (!token) {
+            return res.status(400).json({ error: "Please paste your Canvas access token." });
+        }
+        try {
+            await canvas.getCourses(token);
+        } catch (error) {
+            return canvasFailure(res, error);
+        }
+        await canvasTokens.save(db, req.session.user.username, token);
+        res.json({ connected: true });
+    });
+
+    // Forget the token. Courses that were already synced stay.
+    router.delete("/api/canvas/token", async (req, res) => {
+        await canvasTokens.remove(db, req.session.user.username);
+        res.status(204).end();
+    });
+
+    // Copy Canvas courses and assignments into StudyTrack with the saved token
+    router.post("/api/canvas/sync", async (req, res) => {
+        const username = req.session.user.username;
+        const token = await canvasTokens.load(db, username);
+        if (!token) {
+            return res.status(400).json({ error: "Add your Canvas token on the Settings page first." });
+        }
+
+        let canvasCourses;
+        const assignmentsByCourse = new Map();
+        try {
+            canvasCourses = (await canvas.getCourses(token)).filter((c) => c && c.id && !c.access_restricted_by_date);
+            for (const course of canvasCourses) {
+                assignmentsByCourse.set(course.id, await canvas.getAssignments(course.id, token));
+            }
+        } catch (error) {
+            return canvasFailure(res, error);
+        }
+
+        const summary = await db.tx(async (t) => {
+            const counts = { courses: 0, assignments: 0, skipped: 0 };
+            for (const raw of canvasCourses) {
+                const course = cleanCourse(raw);
+                const existing = await t.oneOrNone(
+                    "SELECT id FROM courses WHERE username = $1 AND canvas_id = $2",
+                    [username, course.canvasId]
+                );
+                const courseId = existing
+                    ? (await t.one(
+                        "UPDATE courses SET code = $1, name = $2 WHERE id = $3 RETURNING id",
+                        [course.code, course.name, existing.id])).id
+                    : (await t.one(
+                        "INSERT INTO courses (username, code, name, canvas_id) VALUES ($1, $2, $3, $4) RETURNING id",
+                        [username, course.code, course.name, course.canvasId])).id;
+                counts.courses++;
+
+                for (const rawAssignment of assignmentsByCourse.get(raw.id) || []) {
+                    const assignment = cleanAssignment(rawAssignment);
+                    if (!assignment) {
+                        counts.skipped++;
+                        continue;
+                    }
+                    const found = await t.oneOrNone(
+                        "SELECT id FROM assignments WHERE ownername = $1 AND canvas_id = $2",
+                        [username, assignment.canvasId]
+                    );
+                    if (found) {
+                        // Keep the user's own status, but mark it Done once it is submitted on Canvas
+                        await t.none(
+                            `UPDATE assignments SET name = $1, due_date = $2, type = $3, course_id = $4,
+                                    status = CASE WHEN $5 THEN 'Done' ELSE status END
+                             WHERE id = $6`,
+                            [assignment.name, assignment.dueDate, assignment.type, courseId, assignment.submitted, found.id]
+                        );
+                    } else {
+                        await t.none(
+                            `INSERT INTO assignments (ownername, course_id, name, description, due_date, type, status, canvas_id)
+                             VALUES ($1, $2, $3, '', $4, $5, $6, $7)`,
+                            [username, courseId, assignment.name, assignment.dueDate, assignment.type,
+                                assignment.submitted ? "Done" : "Not started", assignment.canvasId]
+                        );
+                    }
+                    counts.assignments++;
+                }
+            }
+            return counts;
+        });
+
+        res.json(summary);
     });
 
     // ---- Study sessions (story #17, Log a study session) ----
