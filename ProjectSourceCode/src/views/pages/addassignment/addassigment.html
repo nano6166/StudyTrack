@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Deadlines</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <main class="container">
+
+    <header>
+      <h1>Course Deadlines</h1>
+      <p>Manage your assignments, projects and exams.</p>
+    </header>
+
+    <section class="card">
+      <h2>Select Course</h2>
+
+      <select id="courseSelect">
+        <option value="web-development">Web Development</option>
+        <option value="database-systems">Database Systems</option>
+        <option value="software-engineering">Software Engineering</option>
+      </select>
+    </section>
+
+    <section class="card">
+      <h2>Add New Item</h2>
+
+      <form id="deadlineForm">
+
+        <label for="title">Title *</label>
+        <input
+          type="text"
+          id="title"
+          placeholder="Enter assignment or exam title"
+          required
+        >
+
+        <label for="type">Type</label>
+        <select id="type">
+          <option value="assignment">Assignment</option>
+          <option value="project">Project</option>
+          <option value="exam">Exam</option>
+        </select>
+
+        <label for="dueDate">Due Date *</label>
+        <input
+          type="date"
+          id="dueDate"
+          required
+        >
+
+        <button type="submit">Save</button>
+
+        <p id="errorMessage" role="alert"></p>
+
+      </form>
+    </section>
+
+    <section class="card">
+      <h2 id="courseHeading">Web Development</h2>
+      <h3>Course Items</h3>
+
+      <div id="deadlineList">
+        <p>Loading deadlines...</p>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
