@@ -18,6 +18,11 @@ async function request(url, options = {}) {
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     credentials: "same-origin"
   });
+  // Signed out (for example after the server restarts): go to the login page
+  if (response.status === 401) {
+    window.location.href = "/pages/login/login.html";
+    return new Promise(() => {});
+  }
   if (response.status === 204) return {};
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
