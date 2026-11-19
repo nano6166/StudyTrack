@@ -2,8 +2,10 @@
 // Uses the Google Gemini REST API. The key comes from the GEMINI_API_KEY environment variable
 // (put it in .env, which is gitignored). Nothing else in the app talks to the AI service.
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 const MAX_STEPS = 8;
+// Newer Gemini models "think" before answering, which can take longer than 30 seconds
+const TIMEOUT_MS = Number(process.env.GEMINI_TIMEOUT_MS) || 90000;
 
 function buildPrompt({ title, description, course, dueDate, today }) {
     return [
@@ -57,7 +59,7 @@ async function generateSteps(assignment) {
                     contents: [{ parts: [{ text: buildPrompt(assignment) }] }],
                     generationConfig: { responseMimeType: "application/json", temperature: 0.4 },
                 }),
-                signal: AbortSignal.timeout(30000),
+                signal: AbortSignal.timeout(TIMEOUT_MS),
             }
         );
     } catch (err) {
