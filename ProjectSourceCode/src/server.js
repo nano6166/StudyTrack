@@ -22,8 +22,8 @@ const db = pgp({
     host: process.env.DB_HOST || "db", //Host MUST be 'db' since pg runs in seperate docker container, not in our current container on our loacl network.
     port: 5432,
     database: DBName,
-    user: "postgres",
-    password: process.env.password
+    user:  process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD
 });
 
 app.engine("handlebars", engine());
