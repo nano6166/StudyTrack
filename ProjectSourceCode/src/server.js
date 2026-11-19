@@ -12,6 +12,10 @@ const coursesRoutes = require("./routes/courses");
 const dbRouterFactory = require("./routes/DatabaseRouterFactory.js")
 
 const app = express();
+
+//Fix for render production https proxy
+app.set("trust proxy", 1);
+
 const PORT = 3000;
 
 const pgp = pgPromise();
