@@ -80,6 +80,13 @@ app.get("/register", (req, res) => {
     );
 });
 
+// Display logout page
+app.get("/logout", (req, res) => {
+    res.sendFile(
+        path.join(__dirname, "views/pages/logout/logout.html")
+    );
+});
+
 app.get("/semTotals", (req, res) => {
     res.sendFile(
         path.join(__dirname, "/views/pages/SemesterTotals/SemesterTotals.html")

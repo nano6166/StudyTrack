@@ -15,17 +15,20 @@
 <body>
   <main class="container courses-page">
     <header class="mb-4">
-       <div class="d-flex justify-content-between align-items-center">
+       <div class="d-flex justify-content-between align-items-center ">
         <a href="courses.html">&larr; My courses</a>
-        <a href="/semTotals" class="btn btn-primary">Semester totals</a>
+        <a href="/logout" class="btn btn-outline-secondary btn-sm">Sign out</a>
       </div>
       <p class="text-primary fw-semibold mb-1 mt-3">Study Track</p>
       <h1 id="courseTitle" class="h2">Course</h1>
     </header>
 
     <section class="courses-card p-3 p-md-4 mb-4" aria-labelledby="add-heading">
-      <h2 id="add-heading" class="h5 mb-3">Add an assignment, project or exam</h2>
-
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 id="add-heading" class="h5 mb-3">Add an assignment, project or exam</h2>
+        <a href="/semTotals" class="btn btn-primary">Semester totals</a>
+      </div>
+      
       <form id="addAssignmentForm" class="row g-2 align-items-end" novalidate>
         <div class="col-md-5">
           <label for="assignmentTitle" class="form-label">Title</label>
