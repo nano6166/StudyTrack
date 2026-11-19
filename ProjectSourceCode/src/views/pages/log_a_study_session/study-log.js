@@ -1,7 +1,10 @@
+// Log study time for one assignment. Opened as study-log.html?assignment=<id>
 const assignmentPage = document.querySelector("#assignmentPage");
-const assignmentId = assignmentPage.dataset.assignmentId;
-const STORAGE_KEY = `studytrack:study-sessions:${assignmentId}`;
+const queryId = new URLSearchParams(window.location.search).get("assignment");
+const dataId = assignmentPage.dataset.assignmentId;
+const assignmentId = /^\d+$/.test(queryId || "") ? queryId : (/^\d+$/.test(dataId || "") ? dataId : "");
 
+const assignmentHeading = document.querySelector("header h1");
 const form = document.querySelector("#sessionForm");
 const dateInput = document.querySelector("#sessionDate");
 const minutesInput = document.querySelector("#minutes");
@@ -15,63 +18,36 @@ const totalTime = document.querySelector("#totalTime");
 const errorMessage = document.querySelector("#errorMessage");
 const saveStatus = document.querySelector("#saveStatus");
 
-let sessions = [];
-let storageReady = false;
-
 function showError(message) {
   errorMessage.textContent = message;
   errorMessage.hidden = false;
 }
 
-function getLocalToday() {
-  const today = new Date();
-
-  const year = String(today.getFullYear()).padStart(4, "0");
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-function isValidDate(value) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return false;
+async function request(url, options = {}) {
+  const response = await fetch(url, {
+    ...options,
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    credentials: "same-origin"
+  });
+  if (response.status === 204) return {};
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || `Request failed: ${response.status}`);
   }
-
-  const date = new Date(`${value}T00:00:00Z`);
-
-  return (
-    Number.isFinite(date.getTime()) &&
-    date.toISOString().slice(0, 10) === value
-  );
-}
-
-function calculateTotal(list) {
-  const total = list.reduce((sum, session) => { return sum + session.minutes;}, 0);
-  if (!Number.isSafeInteger(total)) {
-    throw new Error("The total number of minutes is too large.");
-  }
-  return total;
-}
-//this function validates the saved sessions data from localStorage. 
-function validateSessions(data) {
-  if (!Array.isArray(data)) {
-    throw new Error("Invalid saved sessions.");
-  }
-  for (const session of data) {
-    if (!session || !isValidDate(session.date) || !Number.isSafeInteger(session.minutes) || session.minutes <= 0) {
-      throw new Error("Invalid saved study session.");
-    }
-  }
-  calculateTotal(data);
   return data;
 }
 
-function renderSessions() {
+function getLocalToday() {
+  const today = new Date();
+  const year = String(today.getFullYear()).padStart(4, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function renderSessions(sessions, totalMinutes) {
   sessionRows.replaceChildren();
-  const sortedSessions = [...sessions].sort((a, b) => {
-    return b.date.localeCompare(a.date);
-  });
+  const sortedSessions = [...sessions].sort((a, b) => b.date.localeCompare(a.date));
 
   for (const session of sortedSessions) {
     const row = document.createElement("tr");
@@ -79,42 +55,53 @@ function renderSessions() {
     const time = document.createElement("time");
     time.dateTime = session.date;
     time.textContent = session.date;
-
     dateCell.appendChild(time);
+
     const minutesCell = document.createElement("td");
     minutesCell.textContent = String(session.minutes);
 
-    row.append(dateCell, minutesCell);
+    const actionCell = document.createElement("td");
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "btn btn-outline-danger btn-sm";
+    removeButton.textContent = "Remove";
+    removeButton.addEventListener("click", () => deleteSession(session.id, removeButton));
+    actionCell.appendChild(removeButton);
+
+    row.append(dateCell, minutesCell, actionCell);
     sessionRows.appendChild(row);
   }
 
-  const total = calculateTotal(sessions);
-
-  totalTime.textContent = `${total} minute${total === 1 ? "" : "s"}`;
+  totalTime.textContent = `${totalMinutes} minute${totalMinutes === 1 ? "" : "s"}`;
   emptyMessage.hidden = sessions.length > 0;
   tableContainer.hidden = sessions.length === 0;
 }
 
-function loadSessions() {
+async function loadSessions() {
+  const data = await request(`/courses/api/assignments/${encodeURIComponent(assignmentId)}/sessions`);
+  const name = data.assignment.name || data.assignment.description || "Assignment";
+  assignmentHeading.textContent = name;
+  document.title = `Study Track | ${name}`;
+  renderSessions(data.sessions, data.totalMinutes);
+}
+
+async function deleteSession(sessionId, button) {
+  errorMessage.hidden = true;
+  saveStatus.textContent = "";
+  button.disabled = true;
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-
-    sessions = saved === null ? [] : validateSessions(JSON.parse(saved));
-
-    storageReady = true;
-    renderSessions();
+    await request(`/courses/api/sessions/${encodeURIComponent(sessionId)}`, { method: "DELETE" });
+    await loadSessions();
+    saveStatus.textContent = "Study session removed.";
   } catch (error) {
-    storageReady = false;
-    logButton.disabled = true;
-    showError("Your saved sessions could not be loaded. " + "Check that browser storage is available.")
-    console.error("Session loading error:", error);
+    button.disabled = false;
+    showError(error.message);
   }
 }
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
-
-  if (!storageReady) return;
+  if (!assignmentId) return;
 
   errorMessage.hidden = true;
   saveStatus.textContent = "";
@@ -122,44 +109,44 @@ form.addEventListener("submit", (event) => {
   const date = dateInput.value;
   const minutes = minutesInput.valueAsNumber;
 
-  if (!isValidDate(date)) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     showError("Please enter a valid study date.");
     dateInput.focus();
     return;
   }
-// this line checks if the minutes input is a safe integer and greater than 0. 
-  if (!Number.isSafeInteger(minutes) || minutes <= 0) {
-    showError("Minutes must be a whole number greater than 0.");
+  if (!Number.isInteger(minutes) || minutes < 1 || minutes > 1440) {
+    showError("Minutes must be a whole number from 1 to 1440.");
     minutesInput.focus();
     return;
   }
 
+  logButton.disabled = true;
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const currentSessions = saved === null ? [] : validateSessions(JSON.parse(saved));
-    const nextSessions = [
-      ...currentSessions,
-      { date, minutes }
-    ];
-
-    calculateTotal(nextSessions);
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(nextSessions));
-// this line updates the sessions variable with the new list of sessions and calls renderSessions to update the displayed list of study sessions.
-    sessions = nextSessions;
-    renderSessions();
-
+    await request(`/courses/api/assignments/${encodeURIComponent(assignmentId)}/sessions`, {
+      method: "POST",
+      body: JSON.stringify({ date, minutes })
+    });
     minutesInput.value = "";
-    minutesInput.focus();
-// this line updates the saveStatus text content to indicate that the study session has been saved successfully.
+    await loadSessions();
     saveStatus.textContent = "Study session saved.";
+    minutesInput.focus();
   } catch (error) {
-    showError(
-      "Your session could not be saved. " +
-      "Your entered date and minutes have been kept."
-    );
+    showError(error.message);
     console.error("Session saving error:", error);
+  } finally {
+    logButton.disabled = false;
   }
 });
 
 dateInput.value = getLocalToday();
-loadSessions();
+
+if (!assignmentId) {
+  logButton.disabled = true;
+  showError("No assignment was chosen. Open this page as study-log.html?assignment=<id>.");
+} else {
+  loadSessions().catch((error) => {
+    logButton.disabled = true;
+    showError(error.message);
+    console.error("Session loading error:", error);
+  });
+}

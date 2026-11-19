@@ -1,5 +1,5 @@
-// Replace this with your actual backend endpoint.
-//const API_URL = "https://your-canvas-api-url.com/api/deadlines"; // Replace with your actual Canvas API URL
+// Deadlines for the signed-in user. The courses router is mounted at /courses.
+const API_URL = "/courses/api/deadlines";
 //The function: querySelector is used to select the first element that matches a specified CSS selector.
 const rows = document.querySelector("#deadlineRows"); //DEADLINE ROWS 
 const tableContainer = document.querySelector("#tableContainer"); //table container for deadlines
@@ -133,7 +133,8 @@ async function loadDeadlines() {
     });
 
     if (!response.ok) {
-      throw new Error(`Request failed: ${response.status}`);
+      const body = await response.json().catch(() => ({}));
+      throw new Error(body.error || `Request failed: ${response.status}`);
     }
 
     const data = await response.json();
@@ -146,7 +147,7 @@ async function loadDeadlines() {
     rows.replaceChildren();
 
     status.textContent = "";
-    errorMessage.textContent ="Couldn't load the deadlines. Please try again.";
+    errorMessage.textContent = error.message || "Couldn't load the deadlines. Please try again.";
 
     errorMessage.hidden = false;
     console.error("Error loading deadlines:", error);

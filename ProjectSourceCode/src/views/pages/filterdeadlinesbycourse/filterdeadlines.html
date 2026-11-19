@@ -17,39 +17,12 @@
 
             <select id="courseFilter">
                 <option value="all">All courses</option>
-                <option value="Computer Science">Computer Science</option>
-                <option value="Biology">Biology</option>
-                <option value="Chemistry">Chemistry</option>
             </select>
         </div>
 
-        <div id="deadlineList">
+        <p id="errorMessage" class="empty-message" hidden></p>
 
-            <div class="deadline" data-course="Computer Science">
-                <h3>Assignment 1</h3>
-                <p>Course: Computer Science</p>
-                <p>Due: November 15, 2026</p>
-            </div>
-
-            <div class="deadline" data-course="Biology">
-                <h3>Research Paper</h3>
-                <p>Course: Biology</p>
-                <p>Due: November 18, 2026</p>
-            </div>
-
-            <div class="deadline" data-course="Computer Science">
-                <h3>Programming Project</h3>
-                <p>Course: Computer Science</p>
-                <p>Due: November 20, 2026</p>
-            </div>
-
-            <div class="deadline" data-course="Chemistry">
-                <h3>Lab Report</h3>
-                <p>Course: Chemistry</p>
-                <p>Due: November 22, 2026</p>
-            </div>
-
-        </div>
+        <div id="deadlineList"></div>
 
         <p id="emptyMessage" class="empty-message" hidden>
             No deadlines found for this course.

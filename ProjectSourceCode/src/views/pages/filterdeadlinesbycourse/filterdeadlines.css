@@ -53,6 +53,10 @@ select {
     color: #666;
 }
 
+#errorMessage {
+    color: #b42318;
+}
+
 .empty-message {
     color: #777;
     padding: 20px;

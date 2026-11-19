@@ -16,10 +16,10 @@
 </head>
 
 <body>
-  <main id="assignmentPage"  class="container study-page"  data-assignment-id="web-development-project" >
+  <main id="assignmentPage" class="container study-page">
     <header class="mb-4">
       <p class="text-primary fw-semibold mb-1">Study Track</p>
-      <h1 class="h2">Web Development Project</h1>
+      <h1 class="h2">Study session</h1>
       <p class="text-secondary">Record the time you spend studying for this assignment.</p>
     </header>
 
@@ -59,13 +59,13 @@
               Minutes studied
             </label>
 
-            <input  id="minutes" name="minutes" type="number" class="form-control"  min="1" step="1"  required aria-describedby="minutesHelp"></div>
+            <input id="minutes" name="minutes" type="number" class="form-control" min="1" max="1440" step="1" required aria-describedby="minutesHelp"></div>
           <div class="col-md-2">
             <button id="logButton"  type="submit" class="btn btn-primary w-100" > Log  </button>
           </div>
         </div>
 
-        <p id="minutesHelp" class="form-text">Enter a whole number greater than 0. </p>
+        <p id="minutesHelp" class="form-text">Enter a whole number from 1 to 1440.</p>
       </form>
 
       <p id="saveStatus" class="small text-success mb-0"  role="status" aria-live="polite"></p>
@@ -84,6 +84,7 @@
             <tr>
               <th scope="col">Study date</th>
               <th scope="col">Minutes studied</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
 

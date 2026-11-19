@@ -4,36 +4,74 @@ const deadlineList = document.getElementById("deadlineList");
 const courseHeading = document.getElementById("courseHeading");
 const errorMessage = document.getElementById("errorMessage");
 
-const courseNames = {
-  "web-development": "Web Development", "database-systems": "Database Systems", "software-engineering": "Software Engineering" };
-// this loads deadlines for the selected course
-async function loadDeadlines() {
-  const courseId = courseSelect.value;
+async function request(url, options = {}) {
+  const response = await fetch(url, {
+    ...options,
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    credentials: "same-origin"
+  });
+  if (response.status === 204) return null;
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || `Request failed: ${response.status}`);
+  }
+  return data;
+}
 
-  courseHeading.textContent = courseNames[courseId];
+function courseLabel(course) {
+  return course.name ? `${course.code}, ${course.name}` : course.code;
+}
 
-  deadlineList.textContent = "Loading deadlines...";
-//this fetches the deadlines from the server for the selected course
-  try {
-    const response = await fetch( `/api/deadlines?courseId=${encodeURIComponent(courseId)}`);
-    if (!response.ok) {
-      throw new Error("Could not load deadlines.");
-    }
+async function loadCourses() {
+  const courses = await request("/courses/api/courses");
+  const selected = courseSelect.value;
+  courseSelect.replaceChildren();
 
-    const deadlines = await response.json();
+  if (courses.length === 0) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "No courses yet";
+    courseSelect.appendChild(option);
+    courseSelect.disabled = true;
+    form.querySelector("button").disabled = true;
+    courseHeading.textContent = "No course";
+    deadlineList.textContent = "Add a course before saving a deadline.";
+    return;
+  }
 
-    // this sorts the deadlines by due date in ascending order
-    deadlines.sort((a, b) => a.dueDate.localeCompare(b.dueDate) );
-    displayDeadlines(deadlines);
-  } catch (error) {
-    deadlineList.textContent = error.message;
+  for (const course of courses) {
+    const option = document.createElement("option");
+    option.value = String(course.id);
+    option.textContent = courseLabel(course);
+    courseSelect.appendChild(option);
+  }
+
+  courseSelect.disabled = false;
+  form.querySelector("button").disabled = false;
+  if ([...courseSelect.options].some((option) => option.value === selected)) {
+    courseSelect.value = selected;
   }
 }
 
-//this displays the deadlines for the selected course
+async function loadDeadlines() {
+  const courseId = courseSelect.value;
+  const selected = courseSelect.selectedOptions[0];
+  courseHeading.textContent = selected ? selected.textContent : "Course";
+
+  if (!courseId) {
+    deadlineList.textContent = "Add a course before saving a deadline.";
+    return;
+  }
+
+  deadlineList.textContent = "Loading deadlines...";
+  const deadlines = await request(`/courses/api/deadlines?courseId=${encodeURIComponent(courseId)}`);
+  deadlines.sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+  displayDeadlines(deadlines);
+}
+
 function displayDeadlines(deadlines) {
   deadlineList.replaceChildren();
-//this clears the deadline list before displaying new deadlines
+
   if (deadlines.length === 0) {
     const message = document.createElement("p");
     message.className = "empty-message";
@@ -41,13 +79,12 @@ function displayDeadlines(deadlines) {
     deadlineList.appendChild(message);
     return;
   }
-//this iterates over the deadlines and creates a DOM element for each one
-  deadlines.forEach(item => {
+
+  deadlines.forEach((item) => {
     const container = document.createElement("div");
     container.className = "deadline-item";
 
     const details = document.createElement("div");
-
     const title = document.createElement("h4");
     title.textContent = item.title;
 
@@ -56,28 +93,21 @@ function displayDeadlines(deadlines) {
     tag.textContent = item.type;
 
     const date = document.createElement("p");
-
-    // this splits the date string into year, month, and day components
     const [year, month, day] = item.dueDate.split("-").map(Number);
-    const formattedDate = new Date(year, month - 1, day)
-      .toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      });
-
+    const formattedDate = new Date(year, month - 1, day).toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
     date.textContent = `Due: ${formattedDate}`;
 
     details.append(title, tag, date);
 
     const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
     deleteButton.className = "delete-button";
     deleteButton.textContent = "Delete";
-    deleteButton.setAttribute(
-      "aria-label",
-      `Delete ${item.title}`
-    );
-
+    deleteButton.setAttribute("aria-label", `Delete ${item.title}`);
     deleteButton.addEventListener("click", () => {
       deleteDeadline(item.id);
     });
@@ -86,57 +116,60 @@ function displayDeadlines(deadlines) {
     deadlineList.appendChild(container);
   });
 }
-//this handles the form submission for adding a new deadline
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-//this prevents the default form submission behavior
   errorMessage.textContent = "";
+
   const title = document.getElementById("title").value.trim();
   const type = document.getElementById("type").value;
   const dueDate = document.getElementById("dueDate").value;
   const courseId = courseSelect.value;
 
+  if (!courseId) {
+    errorMessage.textContent = "Choose a course.";
+    return;
+  }
   if (!title || !dueDate) {
     errorMessage.textContent = "Please enter a title and due date.";
     return;
   }
 
   try {
-    const response = await fetch("/api/deadlines", {
+    await request("/courses/api/deadlines", {
       method: "POST",
-      headers: {  "Content-Type": "application/json"
-      },
-      body: JSON.stringify({courseId, title, type, dueDate})
+      body: JSON.stringify({ courseId: Number(courseId), title, type, dueDate })
     });
-
-    const result = await response.json();
-//this checks if the response was successful and throws an error if not
-    if (!response.ok) {
-      throw new Error(result.error || "Could not save deadline.");
-    }
     form.reset();
+    courseSelect.value = courseId;
     await loadDeadlines();
-
   } catch (error) {
     errorMessage.textContent = error.message;
   }
 });
-//this handles the deletion of a deadline
+
 async function deleteDeadline(id) {
-  if (!confirm("Are you sure you want to delete this item?")) {
-    return;
-  }
+  if (!confirm("Are you sure you want to delete this item?")) return;
+
   try {
-    const response = await fetch(`/api/deadlines/${id}`, { method: "DELETE" });
-
-    if (!response.ok) {
-      throw new Error("Could not delete deadline.");
-    }
+    await request(`/courses/api/deadlines/${encodeURIComponent(id)}`, { method: "DELETE" });
+    errorMessage.textContent = "";
     await loadDeadlines();
-
   } catch (error) {
     errorMessage.textContent = error.message;
   }
 }
-courseSelect.addEventListener("change", loadDeadlines);
-loadDeadlines();
+
+courseSelect.addEventListener("change", () => {
+  loadDeadlines().catch((error) => {
+    deadlineList.textContent = error.message;
+  });
+});
+
+loadCourses()
+  .then(() => loadDeadlines())
+  .catch((error) => {
+    courseHeading.textContent = "Course";
+    deadlineList.textContent = error.message;
+    errorMessage.textContent = error.message;
+  });
