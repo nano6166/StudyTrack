@@ -16,7 +16,7 @@ const PORT = 3000;
 
 const pgp = pgPromise();
 
-const DBName = "studytrack";
+const DBName = process.env.PGDATABASE;
 
 const db = pgp({ 
     host: process.env.DB_HOST || "db", //Host MUST be 'db' since pg runs in seperate docker container, not in our current container on our loacl network.
