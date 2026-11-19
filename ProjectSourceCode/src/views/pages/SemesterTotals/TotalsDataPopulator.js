@@ -28,7 +28,7 @@ async function loadStats() {
             }
 
             const minutes_total = await minutes_total_res.json();
-            document.getElementById('lifetimeStudyMinutes').textContent = minutes_total_res;
+            document.getElementById('lifetimeStudyMinutes').textContent = minutes_total_res[0].total_study_minutes;
         } catch (err){
                 document.getElementById('lifetimeStudyMinutes').textContent = '0';
             console.log(err)
