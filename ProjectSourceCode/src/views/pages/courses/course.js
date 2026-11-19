@@ -22,7 +22,7 @@ async function request(url, options = {}) {
   });
   // Signed out (for example after the server restarts): go to the login page
   if (response.status === 401) {
-    window.location.href = "/pages/login/login.html";
+    window.location.href = "/login";
     return new Promise(() => {});
   }
 
