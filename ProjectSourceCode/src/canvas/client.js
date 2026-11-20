@@ -1,6 +1,7 @@
 // Canvas LMS REST API client (Import from Canvas).
 // Docs: https://canvas.instructure.com/doc/api/
-// The user pastes a personal access token. It is used for one import and is never saved.
+// The user saves a personal access token on the Settings page (stored encrypted).
+// With CANVAS_DEMO=true in .env, sample data from demoData.js is used instead of the real Canvas.
 const BASE_URL = (process.env.CANVAS_BASE_URL || "https://canvas.colorado.edu").replace(/\/+$/, "");
 
 class CanvasError extends Error {
@@ -48,13 +49,18 @@ async function getAll(path, token) {
     return results;
 }
 
+const DEMO = process.env.CANVAS_DEMO === "true";
+const demo = require("./demoData");
+
 // Courses the user is currently enrolled in
 function getCourses(token) {
+    if (DEMO) return Promise.resolve(demo.getCourses());
     return getAll("/courses?enrollment_state=active&per_page=100", token);
 }
 
 // All assignments of one course, with their due dates
 function getAssignments(courseId, token) {
+    if (DEMO) return Promise.resolve(demo.getAssignments(courseId));
     return getAll(`/courses/${encodeURIComponent(courseId)}/assignments?per_page=100&order_by=due_at&include[]=submission`, token);
 }
 
