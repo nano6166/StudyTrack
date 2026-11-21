@@ -13,9 +13,10 @@
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "scripts": {
+    "scripts": {
     "start": "node ./src/server.js",
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "check:repo": "node scripts/check-repo.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
