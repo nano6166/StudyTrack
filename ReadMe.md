@@ -8,7 +8,7 @@ StudyTrack is a web application for CU Boulder students. Users add their courses
 - Nate Koo (nate-koo)
 - Lucas Lopes (lulo2258)
 - Nathan Novankham (nano6166)
-- Krishiv Singh (?)
+- Krishiv Singh (krsi9308)
 
 ## Technology Stack
 
