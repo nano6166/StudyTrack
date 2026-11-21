@@ -1,0 +1,10 @@
+# macOS and Windows system files
+.DS_Store
+Thumbs.db
+
+# Node dependencies
+node_modules/
+
+# Local settings and secrets (never commit these)
+.env
+.env.test
